@@ -59,7 +59,7 @@ def yahoo_car_crawler(driver, url):
         jpg_folder_name = ' '.join(car_name)
 
         # 下載儲存圖片
-        # save_images(soup, jpg_folder_name)
+        save_images(soup, jpg_folder_name)
 
         # 將爬取的規格資訊存於info_dict
         for field_key, field in cars_table_dict.items():
