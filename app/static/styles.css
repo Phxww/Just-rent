@@ -74,7 +74,7 @@ html {
   /* Optional: Rounds the corners of the background */
 }
 
-/* show cars */
+/* 首頁的熱門車款 */
 
 .no-top {
   padding-top: 20px;
@@ -121,6 +121,25 @@ html {
 .img-fluid {
   margin-bottom: 10px;
   /* 圖片和文字之間的間隔 */
+}
+
+/* 汽車列表 */
+.card-img-top {
+  height: 200px;
+  object-fit: cover;
+}
+
+.card-body {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+/* .card-title, */
+.card-text {
+  white-space: nowrap; 
+  overflow: hidden; /* 隐藏溢出容器的内容 */
+  text-overflow: ellipsis;
 }
 
 /* Debugging Borders */

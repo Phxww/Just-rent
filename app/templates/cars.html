@@ -7,30 +7,34 @@
             <!-- Filter sidebar -->
             <div class="col-lg-3">
                 <div class="filter-group mb-3">
-                    <h4>Vehicle Type</h4>
+                    <h4>車門數</h4>
                     <div class="list-group">
                         <label class="list-group-item">
                             <input class="form-check-input me-1" type="checkbox" value="">
-                            Car
+                            4門
                         </label>
                         <label class="list-group-item">
                             <input class="form-check-input me-1" type="checkbox" value="">
-                            Van
+                            5門
                         </label>
                         <!-- More filters... -->
                     </div>
                 </div>
                 <!-- More filter groups... -->
                 <div class="filter-group mb-3">
-                    <h4>Car Body Type</h4>
+                    <h4>車身型式</h4>
                     <div class="list-group">
                         <label class="list-group-item">
                             <input class="form-check-input me-1" type="checkbox" value="">
-                            Car
+                            掀背車
                         </label>
                         <label class="list-group-item">
                             <input class="form-check-input me-1" type="checkbox" value="">
-                            Van
+                            轎車
+                        </label>
+                        <label class="list-group-item">
+                            <input class="form-check-input me-1" type="checkbox" value="">
+                            跨界休旅車
                         </label>
                         <!-- More filters... -->
                     </div>
@@ -59,8 +63,8 @@
                         </div>
                     </div>
                     <!-- More car cards... -->
-                    <script src="{{ url_for('static', filename='load-cars.js') }}"></script>
-                    <!-- <script>
+                    <!-- <script src="{{ url_for('static', filename='load-cars.js') }}"></script> -->
+                    <script>
                         fetch("http://127.0.0.1:5000/api/cars")
                             .then((response) => response.json())
                             .then((data) => {
@@ -75,11 +79,11 @@
                                             <h5 class="card-title"> ${car.name}</h5>
                                             <p class="card-text"><i class="fas fa-heart"></i> 25 Likes</p>
                                             <p class="card-text">
-                                                <span class="badge bg-primary"><i class="fas fa-user"></i> ${car.model}</span>
-                                                <span class="badge bg-secondary"><i class="fas fa-suitcase"></i> ${car.model}</span>
-                                                <span class="badge bg-success"><i class="fas fa-car"></i> ${car.model}</span>
+                                                <strong class="me-2">Brand:</strong><span>${car.brand}</span><br>
+                                                <strong class="me-2">Year:</strong><span>${car.year}</span><br>
+                                                <strong class="me-2">Model:</strong><span>${car.model}</span>
                                             </p>
-                                            <p class="card-text">Daily rate from <strong>$265</strong></p>
+                                            <p class="card-text">Daily rate from <strong>$265</strong></p><br>
                                             <a href="#" class="btn btn-primary">Rent Now</a>
                                         </div>
                                     </div>
@@ -87,9 +91,9 @@
                                     `;
                                     carsContainer.innerHTML += carHtml
                                 })
-                                .catch(error => console.error('Error fetching cars:', error));
+                                    .catch(error => console.error('Error fetching cars:', error));
                             })
-                    </script> -->
+                    </script>
                 </div>
             </div>
         </div>
