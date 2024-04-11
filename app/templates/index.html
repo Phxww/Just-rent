@@ -2,212 +2,46 @@
 
 {% block content %}
 <!-- content begin -->
-<div class="no-bottom no-top" id="content">
-    <div id="top"></div>
-    <section id="section-hero" aria-label="section" class="full-height vertical-center"
-        data-bgimage="url(images/background/7.jpg) bottom">
+<div id="content">
+    <section id="section-hero">
         <div class="container">
-            <div class="row align-items-center">
-                <div class="spacer-double sm-hide"></div>
-                <div class="col-lg-6">
-                    <h4><span class="id-color">Plan your trip now</span></h4>
-                    <div class="spacer-10"></div>
-                    <h1>Explore the world with comfortable car</h1>
-                    <p class="lead">Embark on unforgettable adventures and discover the world in unparalleled
-                        comfort and
+            <div class="row">
+                <div class="col-lg-6 fade-in">
+                    <h4><span style="font-weight: bold;">Plan your trip now</span></h4>
+                    <h1>Explore the world with a comfortable car</h1>
+                    <p class="lead">Embark on unforgettable adventures and discover the world in unparalleled comfort
+                        and
                         style with our fleet of exceptionally comfortable cars.</p>
-
-                    <a class="btn-main" href="#">Choose a Car</a>&nbsp;&nbsp;&nbsp;<a class="btn-main btn-black"
-                        href="#">Get
-                        the App</a>
+                    <form>
+                        <button type="submit" class="btn btn-outline-dark"> Choose a Car </button>
+                    </form>
                 </div>
-
-                <div class="col-lg-6">
-                    <img src="{{ url_for('static', filename='images/misc/car-2.png') }}" class="img-fluid" alt="">
-                </div>
-
             </div>
         </div>
     </section>
 
     <section id="section-cars" class="no-top">
         <div class="container">
-            <div class="row align-items-center">
-                <div class="col-lg-6 offset-lg-3 text-center">
-                    <h2>Our Vehicle Fleet</h2>
-                    <p>Driving your dreams to reality with an exquisite fleet of versatile vehicles for
-                        unforgettable
-                        journeys.</p>
-                    <div class="spacer-20"></div>
-                </div>
-
-                <div class="clearfix"></div>
-
-                <div id="items-carousel" class="owl-carousel wow fadeIn">
-
-                    <div class="col-lg-12">
-                        <div class="de-item mb30">
-                            <div class="d-img">
-                                <img src="{{ url_for('static', filename='images/cars/jeep-renegade.jpg') }} "class="img-fluid" alt="">
-                            </div>
-                            <div class="d-info">
-                                <div class="d-text">
-                                    <h4>Jeep Renegade</h4>
-                                    <div class="d-item_like">
-                                        <i class="fa fa-heart"></i><span>74</span>
-                                    </div>
-                                    <div class="d-atr-group">
-                                        <span class="d-atr"><img src="{{ url_for('static', filename='images/icons/1.svg') }}"  alt="">5</span>
-                                        <span class="d-atr"><img src="{{ url_for('static', filename='images/icons/2.svg') }}" alt="">2</span>
-                                        <span class="d-atr"><img src="{{ url_for('static', filename='images/icons/3.svg') }}" alt="">4</span>
-                                        <span class="d-atr"><img src="{{ url_for('static', filename='images/icons/4.svg') }}" alt="">SUV</span>
-                                    </div>
-                                    <div class="d-price">
-                                        Daily rate from <span>$265</span>
-                                        <a class="btn-main" href="car-single.html">Rent Now</a>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="col-lg-12">
-                        <div class="de-item mb30">
-                            <div class="d-img">
-                                <img src="{{ url_for('static', filename='images/cars/bmw-m5.jpg') }} " class="img-fluid" alt="">
-                            </div>
-                            <div class="d-info">
-                                <div class="d-text">
-                                    <h4>BMW M2</h4>
-                                    <div class="d-item_like">
-                                        <i class="fa fa-heart"></i><span>36</span>
-                                    </div>
-                                    <div class="d-atr-group">
-                                        <span class="d-atr"><img src="{{ url_for('static', filename='images/icons/1.svg') }}" alt="">5</span>
-                                        <span class="d-atr"><img src="{{ url_for('static', filename='images/icons/2.svg') }}" alt="">2</span>
-                                        <span class="d-atr"><img src="{{ url_for('static', filename='images/icons/3.svg') }}" alt="">4</span>
-                                        <span class="d-atr"><img src="{{ url_for('static', filename='images/icons/4.svg') }}" alt="">SUV</span>
-                                    </div>
-                                    <div class="d-price">
-                                        Daily rate from <span>$244</span>
-                                        <a class="btn-main" href="car-single.html">Rent Now</a>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="col-lg-12">
-                        <div class="de-item mb30">
-                            <div class="d-img">
-                                <img src="{{ url_for('static', filename='images/cars/ferrari-enzo.jpg') }} " class="img-fluid" alt="">
-                            </div>
-                            <div class="d-info">
-                                <div class="d-text">
-                                    <h4>Ferarri Enzo</h4>
-                                    <div class="d-item_like">
-                                        <i class="fa fa-heart"></i><span>85</span>
-                                    </div>
-                                    <div class="d-atr-group">
-                                        <span class="d-atr"><img src="{{ url_for('static', filename='images/icons/1.svg') }}" alt="">5</span>
-                                        <span class="d-atr"><img src="{{ url_for('static', filename='images/icons/2.svg') }}" alt="">2</span>
-                                        <span class="d-atr"><img src="{{ url_for('static', filename='images/icons/3.svg') }}" alt="">4</span>
-                                        <span class="d-atr"><img src="{{ url_for('static', filename='images/icons/4.svg') }}" alt="">SUV</span>
-                                    </div>
-                                    <div class="d-price">
-                                        Daily rate from <span>$167</span>
-                                        <a class="btn-main" href="car-single.html">Rent Now</a>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="col-lg-12">
-                        <div class="de-item mb30">
-                            <div class="d-img">
-                                <img src="{{ url_for('static', filename='images/cars/ford-raptor.jpg') }} " class="img-fluid" alt="">
-                            </div>
-                            <div class="d-info">
-                                <div class="d-text">
-                                    <h4>Ford Raptor</h4>
-                                    <div class="d-item_like">
-                                        <i class="fa fa-heart"></i><span>59</span>
-                                    </div>
-                                    <div class="d-atr-group">
-                                        <span class="d-atr"><img src="{{ url_for('static', filename='images/icons/1.svg') }}" alt="">5</span>
-                                        <span class="d-atr"><img src="{{ url_for('static', filename='images/icons/2.svg') }}" alt="">2</span>
-                                        <span class="d-atr"><img src="{{ url_for('static', filename='images/icons/3.svg') }}" alt="">4</span>
-                                        <span class="d-atr"><img src="{{ url_for('static', filename='images/icons/4.svg') }}" alt="">SUV</span>
-                                    </div>
-                                    <div class="d-price">
-                                        Daily rate from <span>$147</span>
-                                        <a class="btn-main" href="car-single.html">Rent Now</a>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="col-lg-12">
-                        <div class="de-item mb30">
-                            <div class="d-img">
-                                <img src="{{ url_for('static', filename='images/cars/mini-cooper.jpg') }} " class="img-fluid" alt="">
-                            </div>
-                            <div class="d-info">
-                                <div class="d-text">
-                                    <h4>Mini Cooper</h4>
-                                    <div class="d-item_like">
-                                        <i class="fa fa-heart"></i><span>19</span>
-                                    </div>
-                                    <div class="d-atr-group">
-                                        <span class="d-atr"><img src="{{ url_for('static', filename='images/icons/1.svg') }}" alt="">5</span>
-                                        <span class="d-atr"><img src="{{ url_for('static', filename='images/icons/2.svg') }}" alt="">2</span>
-                                        <span class="d-atr"><img src="{{ url_for('static', filename='images/icons/3.svg') }}" alt="">4</span>
-                                        <span class="d-atr"><img src="{{ url_for('static', filename='images/icons/4.svg') }}" alt="">SUV</span>
-                                    </div>
-                                    <div class="d-price">
-                                        Daily rate from <span>$238</span>
-                                        <a class="btn-main" href="car-single.html">Rent Now</a>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="col-lg-12">
-                        <div class="de-item mb30">
-                            <div class="d-img">
-                                <img src="{{ url_for('static', filename='images/cars/vw-polo.jpg') }} "  class="img-fluid" alt="">
-                            </div>
-                            <div class="d-info">
-                                <div class="d-text">
-                                    <h4>VW Polo</h4>
-                                    <div class="d-item_like">
-                                        <i class="fa fa-heart"></i><span>79</span>
-                                    </div>
-                                    <div class="d-atr-group">
-                                        <span class="d-atr"><img src="{{ url_for('static', filename='images/icons/1.svg') }}" alt="">5</span>
-                                        <span class="d-atr"><img src="{{ url_for('static', filename='images/icons/2.svg') }}" alt="">2</span>
-                                        <span class="d-atr"><img src="{{ url_for('static', filename='images/icons/3.svg') }}" alt="">4</span>
-                                        <span class="d-atr"><img src="{{ url_for('static', filename='images/icons/4.svg') }}" alt="">SUV</span>
-                                    </div>
-                                    <div class="d-price">
-                                        Daily rate from <span>$106</span>
-                                        <a class="btn-main" href="car-single.html">Rent Now</a>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                </div>
-
+            <div class="col-lg-6 offset-lg-3 text-center">
+                <h2>Our Vehicle Fleet</h2>
+                <p>Driving your dreams to reality with an exquisite fleet of versatile vehicles for
+                    unforgettable
+                    journeys.</p>
+                <div class="spacer-20"></div>
+            </div>
+            <div id="car-carousel" class="carousel" data-ride="carousel">
+                <div class="carousel-inner" id="carousel-inner"></div>
+                <a class="carousel-control-prev" href="#car-carousel" role="button" data-slide="prev">
+                    <span class="carousel-control-prev-icon"><i class="fa-solid fa-chevron-left"></i></span>
+                </a>
+                <a class="carousel-control-next" href="#car-carousel" role="button" data-slide="next">
+                    <span class="carousel-control-next-icon"><i class="fa-solid fa-chevron-right"></i></span>
+                </a>
             </div>
         </div>
     </section>
 
-    <section id="section-img-with-tab" data-bgcolor="#f8f8f8">
+    <!-- <section id="section-img-with-tab" data-bgcolor="#f8f8f8">
         <div class="container">
             <div class="row align-items-center">
                 <div class="col-lg-5 offset-lg-7">
@@ -320,7 +154,8 @@
                                 <span class="by">Stepanie Hutchkiss</span>
                             </blockquote>
                         </div>
-                        <img src="{{ url_for('static', filename='images/testimonial/1.jpg') }} "  class="img-fluid" alt="">
+                        <img src="{{ url_for('static', filename='images/testimonial/1.jpg') }} " class="img-fluid"
+                            alt="">
                     </div>
                 </div>
 
@@ -339,7 +174,8 @@
                                 <span class="by">Jovan Reels</span>
                             </blockquote>
                         </div>
-                        <img src="{{ url_for('static', filename='images/testimonial/2.jpg') }} " class="img-fluid" alt="">
+                        <img src="{{ url_for('static', filename='images/testimonial/2.jpg') }} " class="img-fluid"
+                            alt="">
                     </div>
                 </div>
 
@@ -356,7 +192,8 @@
                                 <span class="by">Kanesha Keyton</span>
                             </blockquote>
                         </div>
-                        <img src="{{ url_for('static', filename='images/testimonial/3.jpg') }} " class="img-fluid" alt="">
+                        <img src="{{ url_for('static', filename='images/testimonial/3.jpg') }} " class="img-fluid"
+                            alt="">
                     </div>
                 </div>
 
@@ -383,7 +220,8 @@
                                     <div class="m">10</div>
                                     <div class="d">MAR</div>
                                 </div>
-                                <img alt="" src="{{ url_for('static', filename='images/news/pic-blog-1.jpg') }} "  class="lazy">
+                                <img alt="" src="{{ url_for('static', filename='images/news/pic-blog-1.jpg') }} "
+                                    class="lazy">
                             </div>
                             <div class="post-text">
                                 <h4><a href="news-single.html">Enjoy Best Travel Experience<span></span></a>
@@ -405,7 +243,8 @@
                                     <div class="m">12</div>
                                     <div class="d">MAR</div>
                                 </div>
-                                <img alt="" src="{{ url_for('static', filename='images/news/pic-blog-2.jpg') }} " class="lazy">
+                                <img alt="" src="{{ url_for('static', filename='images/news/pic-blog-2.jpg') }} "
+                                    class="lazy">
                             </div>
                             <div class="post-text">
                                 <h4><a href="news-single.html">The Future of Car Rent<span></span></a></h4>
@@ -426,7 +265,8 @@
                                     <div class="m">14</div>
                                     <div class="d">MAR</div>
                                 </div>
-                                <img alt="" src="{{ url_for('static', filename='images/news/pic-blog-3.jpg') }} " class="lazy">
+                                <img alt="" src="{{ url_for('static', filename='images/news/pic-blog-3.jpg') }} "
+                                    class="lazy">
                             </div>
                             <div class="post-text">
                                 <h4><a href="news-single.html">Holiday Tips For Backpacker<span></span></a></h4>
@@ -440,7 +280,7 @@
                 </div>
             </div>
         </div>
-    </section>
+    </section> -->
 
 
 

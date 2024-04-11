@@ -8,6 +8,10 @@ def home():
     return render_template('index.html')
 
 
+@app.route('/cars')
+def carss():
+    return render_template('cars.html')
+
 @app.route('/api/cars')
 def cars():
     brand = request.args.get('brand')

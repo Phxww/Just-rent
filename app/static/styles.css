@@ -1,0 +1,136 @@
+body,
+html {
+  max-width: 100%;
+  overflow-x: hidden;
+  /* 防止水平滾動 */
+}
+
+* {
+  margin: 0;
+  padding: 0;
+}
+
+/* navbar */
+.navbar-nav {
+  justify-content: right;
+  width: 100%;
+}
+
+.nav-item {
+  margin-left: 20px;
+}
+
+.sign-in-btn {
+  justify-content: end;
+}
+
+/* home content */
+#section-hero {
+  background-image: url("https://source.unsplash.com/featured/?car");
+  background-size: cover;
+  background-position: center;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+}
+
+#section-hero img {
+  max-height: 500px;
+  object-fit: cover;
+  /* Prevent stretching on large screens */
+  width: auto;
+  /* Maintain aspect ratio */
+  margin: auto;
+  /* Center the image */
+}
+
+.fade-in {
+  animation: fadeIn 2s;
+  padding: 20px;
+  border-radius: 15px;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+.fade-in {
+  background-color: rgba(255, 255, 255, 0.6);
+  /* Semi-transparent white background */
+  margin: 0;
+  /* Adjust margin as needed */
+  padding: 20px;
+  /* Add padding for better text visibility */
+  border-radius: 15px;
+  /* Optional: Rounds the corners of the background */
+}
+
+/* show cars */
+
+.no-top {
+  padding-top: 20px;
+}
+
+.carousel-control-prev,
+.carousel-control-next {
+  align-items: center;
+  /* Center vertically in the carousel */
+  justify-content: center;
+  /* Center horizontally */
+  width: 5%;
+  /* Make the clickable area larger for better UX */
+}
+
+/* .carousel-control-prev-icon,
+  .carousel-control-next-icon {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+  } */
+
+.fa-chevron-right,
+.fa-chevron-left {
+  color: #000000;
+  /* Change as needed */
+}
+
+.car-info {
+  /* background-color: rgba(167, 174, 183, 0.7); */
+  /* 輕微透明的背景提高可讀性 */
+  border-radius: 5px;
+  /* 圓角邊框 */
+  padding: 10px;
+  /* 內距增加空間 */
+  text-align: center;
+}
+
+.carousel-item {
+  text-align: center;
+  /* 中心對齊文字 */
+}
+
+.img-fluid {
+  margin-bottom: 10px;
+  /* 圖片和文字之間的間隔 */
+}
+
+/* Debugging Borders */
+/* .container,
+.carousel-inner,
+.carousel-item,
+.fa-solid {
+  border: 1px solid red;
+}
+
+#section-cars {
+  border: 1px solid blue;
+} */
