@@ -90,13 +90,6 @@ html {
   /* Make the clickable area larger for better UX */
 }
 
-/* .carousel-control-prev-icon,
-  .carousel-control-next-icon {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-  } */
-
 .fa-chevron-right,
 .fa-chevron-left {
   color: #000000;
