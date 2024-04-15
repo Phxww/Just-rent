@@ -2,7 +2,6 @@
     aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
-            <!-- <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"> -->
             <form method="POST" action="{{ url_for('edit_car', id=car.id) }}">
                 <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                 <div class="modal-header">
@@ -10,15 +9,15 @@
                     </h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                                {% with messages = get_flashed_messages(with_categories=true) %}
-                                {% if messages %}
-                                {% for category, message in messages %}
-                                <div class="alert {{ category }}">{{ message }}</div>
-                                {% endfor %}
-                                {% endif %}
-                                {% endwith %}
-                                
-                                {% block content %} {% endblock %}
+                {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                {% for category, message in messages %}
+                <div class="alert {{ category }}">{{ message }}</div>
+                {% endfor %}
+                {% endif %}
+                {% endwith %}
+
+                {% block content %} {% endblock %}
 
                 <!-- <div class="modal-body"> -->
                 <div class="card">

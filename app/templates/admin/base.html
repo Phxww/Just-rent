@@ -128,5 +128,12 @@
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 
 </body>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        $(".alert").delay(5000).slideUp(200, function () {
+            $(this).alert('close');
+        });
+    });
+</script>
 
 </html>

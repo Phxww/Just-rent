@@ -144,7 +144,7 @@ def new_car():
         db.session.add(new_car)
         try:
             db.session.commit()
-            # Assuming you have a route to list cars
+            flash('New car added successfully!', 'success')
             return redirect(url_for('admin_cars'))
         except Exception as e:
             db.session.rollback()
@@ -152,6 +152,26 @@ def new_car():
 
     # Show the form if GET request
     return render_template('admin/new_car.html')
+
+# 刪除汽車
+
+
+@app.route('/admin/cars/<int:id>/delete', methods=['POST']) # Change to POST if using forms
+def delete_car(id):
+    car = Car.query.get_or_404(id)
+
+    try:
+        db.session.delete(car)  # Perform the delete operation
+        db.session.commit()  # Commit the transaction
+        flash('Car deleted successfully!', 'success')  # Provide user feedback
+        # Redirect to the car listing page
+        return redirect(url_for('admin_cars'))
+    except Exception as e:
+        db.session.rollback()  # Roll back the transaction in case of error
+        flash('Failed to delete car. Error: {}'.format(
+            str(e)), 'error')  # Provide error message
+        # Optionally redirect back to the same page or error page
+        return redirect(url_for('admin_cars'))
 
 
 @app.route('/admin/users')

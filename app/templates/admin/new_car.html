@@ -1,16 +1,16 @@
 {% extends "admin/base.html" %}
 {% block content %}
+{% with messages = get_flashed_messages(with_categories=true) %}
+{% if messages %}
+{% for category, message in messages %}
+<div class="alert {{ category }}">{{ message }}</div>
+{% endfor %}
+{% endif %}
+{% endwith %}
 <div class="=content">
     <!-- <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"> -->
     <form method="POST" action="/admin/cars/new">
         <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-        {% with messages = get_flashed_messages(with_categories=true) %}
-        {% if messages %}
-        {% for category, message in messages %}
-        <div class="alert {{ category }}">{{ message }}</div>
-        {% endfor %}
-        {% endif %}
-        {% endwith %}
 
         <div class="col-md-6 col-12">
             <div class="card">
@@ -22,13 +22,6 @@
                         <form class="form form-vertical">
                             <div class="form-body">
                                 <div class="row">
-                                    <!-- <div class="col-12">
-                                        <div class="form-group">
-                                            <label for="name">Name</label>
-                                            <input type="text" id="name" class="form-control" name="name"
-                                                placeholder="Name">
-                                        </div>
-                                    </div> -->
                                     <div class="col-12">
                                         <div class="form-group">
                                             <label for="name">名稱</label>
