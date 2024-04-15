@@ -63,12 +63,19 @@ def pop():
 
 
 # ==== admin ====
+# 瀏覽汽車
+@app.route('/admin', methods=['GET'])
+def home_car():
+    return redirect(url_for('admin_cars'))
+
+
 @app.route('/admin/cars')
 def admin_cars():
     cars = Car.query.all()
     return render_template('admin/cars.html', cars=cars)
 
 
+# 編輯汽車
 @app.route('/admin/cars/<int:id>', methods=['GET', 'POST'])
 def edit_car(id):
     car = Car.query.get_or_404(id)
@@ -102,6 +109,50 @@ def edit_car(id):
             flash('Car details updated successfully!', 'success')
             return redirect(url_for('admin_cars'))
     return render_template('admin/cars.html')
+
+# 新增汽車
+
+
+@app.route('/admin/cars/new', methods=['GET', 'POST'])
+def new_car():
+    if request.method == 'POST':
+        # Extract information from form
+        name = request.form.get('name')
+        brand = request.form.get('brand')
+        model = request.form.get('model')
+        year = request.form.get('year')
+        body = request.form.get('body')
+        door = request.form.get('door')
+        seat = request.form.get('seat')
+        displacement = request.form.get('displacement')
+        car_length = request.form.get('car_length')
+        wheelbase = request.form.get('wheelbase')
+        power_type = request.form.get('power_type')
+
+        # Validate the input
+        if not name or not brand or not model or not year:
+            flash('Name, brand, model, and year are required.', 'error')
+            return render_template('admin/new_car.html')
+
+        # Create a new Car instance
+        new_car = Car(name=name, model=model, year=year, body=body, seat=seat,
+                      brand=brand, door=door,
+                      displacement=displacement, car_length=car_length, wheelbase=wheelbase,
+                      power_type=power_type)
+
+        # Add to the database
+        db.session.add(new_car)
+        try:
+            db.session.commit()
+            # Assuming you have a route to list cars
+            return redirect(url_for('admin_cars'))
+        except Exception as e:
+            db.session.rollback()
+            flash(f'Error adding car: {str(e)}', 'error')
+
+    # Show the form if GET request
+    return render_template('admin/new_car.html')
+
 
 @app.route('/admin/users')
 def admin_users():
