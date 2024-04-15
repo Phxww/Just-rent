@@ -15,6 +15,10 @@ def home():
 def carss():
     return render_template("cars.html")
 
+@app.route("/carss")
+def ddd():
+    return render_template("car-single.html")
+
 
 # ==== api ====
 
@@ -44,7 +48,7 @@ def cars():
 
 @app.route("/api/cars/pop")
 def pop():
-    cars = Car.query.order_by(Car.year.desc()).limit(5).all()
+    cars = Car.query.order_by(Car.year.desc()).limit(3).all()
     # print(cars[0].items())
     cars_list = [{
         'id': car.id,

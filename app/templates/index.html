@@ -24,22 +24,18 @@
         <div class="container">
             <div class="col-lg-6 offset-lg-3 text-center">
                 <h2>Our Vehicle Fleet</h2>
-                <p>Driving your dreams to reality with an exquisite fleet of versatile vehicles for
-                    unforgettable
-                    journeys.</p>
+                <p>Driving your dreams to reality with an exquisite fleet of versatile vehicles for unforgettable
+                    journeys.
+                </p>
                 <div class="spacer-20"></div>
             </div>
-            <div id="car-carousel" class="carousel" data-ride="carousel">
-                <div class="carousel-inner" id="carousel-inner"></div>
-                <a class="carousel-control-prev" href="#car-carousel" role="button" data-slide="prev">
-                    <span class="carousel-control-prev-icon"><i class="fa-solid fa-chevron-left"></i></span>
-                </a>
-                <a class="carousel-control-next" href="#car-carousel" role="button" data-slide="next">
-                    <span class="carousel-control-next-icon"><i class="fa-solid fa-chevron-right"></i></span>
-                </a>
+            <div class="row" id="cars-container">
+                <script src="{{ url_for('static', filename='js/pop-cars.js') }}"></script>
             </div>
         </div>
     </section>
+
+
 </div>
 <!-- content close -->
 <a href="#" id="back-to-top"></a>

@@ -10,6 +10,14 @@ html {
   padding: 0;
 }
 
+/* .content {
+  flex: 1 0 auto;
+}
+
+footer {
+  flex-shrink: 0;
+} */
+
 /* navbar */
 .navbar-nav {
   justify-content: right;
@@ -80,61 +88,24 @@ html {
   padding-top: 20px;
 }
 
-.carousel-control-prev,
-.carousel-control-next {
-  align-items: center;
-  /* Center vertically in the carousel */
-  justify-content: center;
-  /* Center horizontally */
-  width: 5%;
-  /* Make the clickable area larger for better UX */
+#section-cars {
+  padding-top: 40px; /* Adjust the padding as needed */
 }
 
-.fa-chevron-right,
-.fa-chevron-left {
-  color: #000000;
-  /* Change as needed */
-}
-
-.car-info {
-  /* background-color: rgba(167, 174, 183, 0.7); */
-  /* 輕微透明的背景提高可讀性 */
-  border-radius: 5px;
-  /* 圓角邊框 */
-  padding: 10px;
-  /* 內距增加空間 */
-  text-align: center;
-}
-
-.carousel-item {
-  text-align: center;
-  /* 中心對齊文字 */
-}
-
-.img-fluid {
-  margin-bottom: 10px;
-  /* 圖片和文字之間的間隔 */
-}
-
-/* 汽車列表 */
 .card-img-top {
-  height: 200px;
-  object-fit: cover;
+  width: 100%;
+  height: 200px; /* Set a fixed height for the images */
+  object-fit: cover; /* This makes sure the image covers the area nicely */
 }
 
-.card-body {
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
+.original-price {
+  font-size: smaller; /* Smaller font-size for the original price */
 }
 
-/* .card-title, */
-.card-text {
-  white-space: nowrap; 
-  overflow: hidden; /* 隐藏溢出容器的内容 */
-  text-overflow: ellipsis;
+.discounted-price {
+  color: #dc3545; /* A striking color for the discounted price */
+  font-weight: bold; /* Optional: makes the discounted price more prominent */
 }
-
 
 /* Debugging Borders */
 /* .container,
