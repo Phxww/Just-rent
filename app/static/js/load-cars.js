@@ -10,7 +10,7 @@ fetch("/api/cars")
             <img src="https://fakeimg.pl/250/" class="card-img-top" alt="Car image"
                 style="height: 200px;">
               <div class="card-body">
-                  <h5 class="card-title"> ${car.name}</h5>
+                  <h5 class="card-title"><a href="/cars/${car.id}">${car.name}</a></h5>
                   <p class="card-text"><i class="fas fa-heart"></i> 25 Likes</p>
                   <p class="card-text">
                       <strong class="me-2">Brand:</strong><span>${car.brand}</span><br>

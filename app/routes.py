@@ -12,12 +12,13 @@ def home():
 
 
 @app.route("/cars")
-def carss():
+def view_cars():
     return render_template("cars.html")
 
-@app.route("/carss")
-def ddd():
-    return render_template("car-single.html")
+
+@app.route('/cars/<int:car_id>')
+def view_spec_car(car_id):
+    return render_template('car-single.html', car_id=car_id)
 
 
 # ==== api ====
@@ -35,7 +36,8 @@ def cars():
 
     # 以字典返回資料
     cars_list = [
-        {"name": car.name,
+        {"id": car.id,
+        "name": car.name,
          "brand": car.brand,
          "year": car.year,
          "model": car.model}
@@ -54,16 +56,33 @@ def pop():
         'id': car.id,
         'name': car.name,
         'brand': car.brand,
-        'year': car.year
+        'year': car.year,
+        'model': car.model,
+        'seat': car.seat,
+        'door': car.door,
+        'body': car.body
     } for car in cars]
 
-    # return jsonify(cars_list)
-    return cars_list
+    return jsonify(cars_list)
 
-# @app.route('/cars/:car_id')
-# def cars():
-#     # 撈出單一汽車規格的資訊
-#     return render_template('car-single.html')
+# 汽車詳細規格
+
+
+@app.route('/api/cars/<int:car_id>')
+def car_spec_api(car_id):
+    car = Car.query.get_or_404(car_id)
+    car_data = {
+        'id': car.id,
+        'name': car.name,
+        'brand': car.brand,
+        'year': car.year,
+        'model': car.model,
+        'seat': car.seat,
+        'door': car.door,
+        'body': car.body
+    }
+
+    return jsonify(car_data)
 
 
 # ==== admin ====
@@ -160,7 +179,8 @@ def new_car():
 # 刪除汽車
 
 
-@app.route('/admin/cars/<int:id>/delete', methods=['POST']) # Change to POST if using forms
+# Change to POST if using forms
+@app.route('/admin/cars/<int:id>/delete', methods=['POST'])
 def delete_car(id):
     car = Car.query.get_or_404(id)
 

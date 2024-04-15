@@ -15,9 +15,9 @@ fetch("/api/cars/pop")
             <div class="card-body">
               <h5 class="card-title">${car.name}</h5>
                 <p class="card-text">
-                  <strong class="me-2">Brand:</strong><span>${car.brand}</span><br>
-                  <strong class="me-2">Year:</strong><span>${car.year}</span><br>
-                  <strong class="me-2">Model:</strong><span>${car.model}</span>
+                  <strong class="me-2">Seat:</strong><span>${car.seat}</span><br>
+                  <strong class="me-2">Door:</strong><span>${car.door}</span><br>
+                  <strong class="me-2">Body:</strong><span>${car.body}</span>
                 </p>
             </div>
               <div class="card-footer">
