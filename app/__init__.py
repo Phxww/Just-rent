@@ -3,13 +3,13 @@ from flask import Flask
 from flask_migrate import Migrate
 from dotenv import load_dotenv
 from config import Config
-from flask_cors import CORS
+from flask_wtf import CSRFProtect
 
 load_dotenv()
 
 app = Flask(__name__)
-CORS(app)
 app.config.from_object(Config)
+csrf = CSRFProtect(app)
 db = SQLAlchemy(app)
 migrate = Migrate(app, db)
 

@@ -1,7 +1,7 @@
 from app import app, db
-from flask import render_template, request, jsonify
+from flask import render_template, request, jsonify, flash, redirect, url_for
 from app.models import User, Car
-from sqlalchemy import text
+from app.utilities.helpers import clean_input
 
 # 前端渲染
 
@@ -14,7 +14,6 @@ def home():
 @app.route("/cars")
 def carss():
     return render_template("cars.html")
-
 
 
 # ==== api ====
@@ -43,7 +42,6 @@ def cars():
     return jsonify(cars_list)
 
 
-
 @app.route("/api/cars/pop")
 def pop():
     cars = Car.query.order_by(Car.year.desc()).limit(5).all()
@@ -64,11 +62,46 @@ def pop():
 #     return render_template('car-single.html')
 
 
-# ==== admin api ====
+# ==== admin ====
 @app.route('/admin/cars')
 def admin_cars():
-    return render_template('admin/cars.html')
+    cars = Car.query.all()
+    return render_template('admin/cars.html', cars=cars)
 
+
+@app.route('/admin/cars/<int:id>', methods=['GET', 'POST'])
+def edit_car(id):
+    car = Car.query.get_or_404(id)
+    if request.method == "POST":
+        fields = {
+            'name': request.form.get('name'),
+            'model': request.form.get('model'),
+            # Handling integer conversion
+            'year': request.form.get('year', type=int),
+            'seat': request.form.get('seat'),
+            'body': request.form.get('body'),
+            'displacement': request.form.get('displacement'),
+            'car_length': request.form.get('car_length'),
+            'wheelbase': request.form.get('wheelbase'),
+            'power_type': request.form.get('power_type'),
+            'brand': request.form.get('brand'),
+            # Handling integer conversion
+            'door': request.form.get('door')
+        }
+        all_inputs_valid = True
+        for key, value in fields.items():
+            cleaned_value = clean_input(value)
+            if cleaned_value is not None:
+                setattr(car, key, cleaned_value)
+            else:
+                flash(f'Invalid input for {key}', 'error')
+                all_inputs_valid = False
+                return redirect(url_for('admin_cars', open_modal=id))
+        if all_inputs_valid:
+            db.session.commit()
+            flash('Car details updated successfully!', 'success')
+            return redirect(url_for('admin_cars'))
+    return render_template('admin/cars.html')
 
 @app.route('/admin/users')
 def admin_users():

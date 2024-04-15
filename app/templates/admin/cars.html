@@ -1,129 +1,76 @@
 {% extends "admin/base.html" %}
 {% block content %}
 
-            <!-- Hoverable rows start -->
-            <section class="section">
-                <div class="row" id="table-hover-row">
-                    <div class="col-12">
-                        <div class="card">
-                            <div class="card-header">
-                                <h4 class="card-title">Hoverable rows</h4>
-                            </div>
-                            <div class="card-content">
-                                <div class="card-body">
-                                    <p>Add <code class="highlighter-rouge">.table-hover</code> to enable a hover state
-                                        on table
-                                        rows
-                                        within a
-                                        <code class="highlighter-rouge">&lt;tbody&gt;</code>.
-                                    </p>
-                                </div>
-                                <!-- table hover -->
-                                <div class="table-responsive">
-                                    <table class="table table-hover mb-0">
-                                        <thead>
-                                            <tr>
-                                                <th>NAME</th>
-                                                <th>RATE</th>
-                                                <th>SKILL</th>
-                                                <th>TYPE</th>
-                                                <th>LOCATION</th>
-                                                <th>ACTION</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <tr>
-                                                <td class="text-bold-500">Michael Right</td>
-                                                <td>$15/hr</td>
-                                                <td class="text-bold-500">UI/UX</td>
-                                                <td>Remote</td>
-                                                <td>Austin,Taxes</td>
-                                                <td><a href="#"><svg xmlns="http://www.w3.org/2000/svg" width="24"
-                                                            height="24" viewBox="0 0 24 24" fill="none"
-                                                            stroke="currentColor" stroke-width="2"
-                                                            stroke-linecap="round" stroke-linejoin="round"
-                                                            class="feather feather-mail badge-circle badge-circle-light-secondary font-medium-1">
-                                                            <path
-                                                                d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z">
-                                                            </path>
-                                                            <polyline points="22,6 12,13 2,6"></polyline>
-                                                        </svg></a></td>
-                                            </tr>
-                                            <tr>
-                                                <td class="text-bold-500">Morgan Vanblum</td>
-                                                <td>$13/hr</td>
-                                                <td class="text-bold-500">Graphic concepts</td>
-                                                <td>Remote</td>
-                                                <td>Shangai,China</td>
-                                                <td><a href="#"><svg xmlns="http://www.w3.org/2000/svg" width="24"
-                                                            height="24" viewBox="0 0 24 24" fill="none"
-                                                            stroke="currentColor" stroke-width="2"
-                                                            stroke-linecap="round" stroke-linejoin="round"
-                                                            class="feather feather-mail badge-circle badge-circle-light-secondary font-medium-1">
-                                                            <path
-                                                                d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z">
-                                                            </path>
-                                                            <polyline points="22,6 12,13 2,6"></polyline>
-                                                        </svg></a></td>
-                                            </tr>
-                                            <tr>
-                                                <td class="text-bold-500">Tiffani Blogz</td>
-                                                <td>$15/hr</td>
-                                                <td class="text-bold-500">Animation</td>
-                                                <td>Remote</td>
-                                                <td>Austin,Texas</td>
-                                                <td><a href="#"><svg xmlns="http://www.w3.org/2000/svg" width="24"
-                                                            height="24" viewBox="0 0 24 24" fill="none"
-                                                            stroke="currentColor" stroke-width="2"
-                                                            stroke-linecap="round" stroke-linejoin="round"
-                                                            class="feather feather-mail badge-circle badge-circle-light-secondary font-medium-1">
-                                                            <path
-                                                                d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z">
-                                                            </path>
-                                                            <polyline points="22,6 12,13 2,6"></polyline>
-                                                        </svg></a></td>
-                                            </tr>
-                                            <tr>
-                                                <td class="text-bold-500">Ashley Boul</td>
-                                                <td>$15/hr</td>
-                                                <td class="text-bold-500">Animation</td>
-                                                <td>Remote</td>
-                                                <td>Austin,Texas</td>
-                                                <td><a href="#"><svg xmlns="http://www.w3.org/2000/svg" width="24"
-                                                            height="24" viewBox="0 0 24 24" fill="none"
-                                                            stroke="currentColor" stroke-width="2"
-                                                            stroke-linecap="round" stroke-linejoin="round"
-                                                            class="feather feather-mail badge-circle badge-circle-light-secondary font-medium-1">
-                                                            <path
-                                                                d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z">
-                                                            </path>
-                                                            <polyline points="22,6 12,13 2,6"></polyline>
-                                                        </svg></a></td>
-                                            </tr>
-                                            <tr>
-                                                <td class="text-bold-500">Mikkey Mice</td>
-                                                <td>$15/hr</td>
-                                                <td class="text-bold-500">Animation</td>
-                                                <td>Remote</td>
-                                                <td>Austin,Texas</td>
-                                                <td><a href="#"><svg xmlns="http://www.w3.org/2000/svg" width="24"
-                                                            height="24" viewBox="0 0 24 24" fill="none"
-                                                            stroke="currentColor" stroke-width="2"
-                                                            stroke-linecap="round" stroke-linejoin="round"
-                                                            class="feather feather-mail badge-circle badge-circle-light-secondary font-medium-1">
-                                                            <path
-                                                                d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z">
-                                                            </path>
-                                                            <polyline points="22,6 12,13 2,6"></polyline>
-                                                        </svg></a></td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
-                        </div>
+<!-- Hoverable rows start -->
+<section class="section">
+    <div class="row" id="table-hover-row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h4 class="card-title">汽車管理表</h4>
+                </div>
+                <div class="card-content">
+                    <div class="card-body">
+                        <!-- <p>Add <code class="highlighter-rouge">.table-hover</code> to enable a hover state
+                            on table
+                            rows
+                            within a
+                            <code class="highlighter-rouge">&lt;tbody&gt;</code>.
+                        </p> -->
+                        <button type="button" class="btn btn-outline-primary">新增汽車</button>
+                    </div>
+                    <!-- table hover -->
+                    <div class="table-responsive">
+                        <table class="table table-hover mb-0">
+                            <thead>
+                                <tr>
+                                    <th>Id</th>
+                                    <th>Name</th>
+                                    <th>Status</th>
+                                    <th>Booking ID</th>
+                                    <th>ACTION</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for car in cars %}
+                                <tr>
+                                    <td>{{ car.id }}</td>
+                                    <td>{{ car.name }}</td>
+                                    <td>{{ car.name }}</td>
+                                    <td>{{ car.name }}</td>
+                                    <td>
+                                        <!-- Trigger/Edit Button -->
+                                        <button type="button" class="btn btn-primary" data-bs-toggle="modal"
+                                            data-bs-target="#editCarModal{{ car.id }}">
+                                            <i class="fa-solid fa-pen-to-square"></i>
+                                        </button>
+                                        <!-- Delete is another functionality, handle separately -->
+                                        <button type="button" class="btn btn-danger">
+                                            <i class="fa-solid fa-trash"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                                {% if car %}
+                                {% include 'admin/edit_car.html' %}
+                                {% endif %}
+                                {% endfor %}
+                            </tbody>
+                        </table>
                     </div>
                 </div>
-            </section>
-            <!-- Hoverable rows end -->
+            </div>
+        </div>
+    </div>
+</section>
+<!-- Hoverable rows end -->
+<script>
+    window.addEventListener('DOMContentLoaded', (event) => {
+        const urlParams = new URLSearchParams(window.location.search);
+        const openModal = urlParams.get('open_modal');
+        if (openModal) {
+            const modalToOpen = new bootstrap.Modal(document.getElementById('editCarModal' + openModal));
+            modalToOpen.show();
+        }
+    });
+</script>
 {% endblock %}
