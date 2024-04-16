@@ -1,0 +1,87 @@
+{% extends "admin/base.html" %}
+{% block content %}
+
+{% with messages = get_flashed_messages(with_categories=true) %}
+{% if messages %}
+{% for category, message in messages %}
+<div class="alert {{ category }}">{{ message }}</div>
+{% endfor %}
+{% endif %}
+{% endwith %}
+<!-- Hoverable rows start -->
+<section class="section">
+    <div class="row" id="table-hover-row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h4 class="card-title">汽車管理表</h4>
+                </div>
+                <div class="card-content">
+                    <div class="card-body">
+                        <!-- <p>Add <code class="highlighter-rouge">.table-hover</code> to enable a hover state
+                            on table
+                            rows
+                            within a
+                            <code class="highlighter-rouge">&lt;tbody&gt;</code>.
+                        </p> -->
+                        <a href="/admin/cars/new" class="btn btn-outline-primary">新增汽車</a>
+
+                    </div>
+                    <!-- table hover -->
+                    <div class="table-responsive">
+                        <table class="table table-hover mb-0">
+                            <thead>
+                                <tr>
+                                    <th>Id</th>
+                                    <th>Name</th>
+                                    <th>Status</th>
+                                    <th>Booking ID</th>
+                                    <th>ACTION</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for car in cars %}
+                                <tr>
+                                    <td>{{ car.id }}</td>
+                                    <td>{{ car.name }}</td>
+                                    <td>{{ car.name }}</td>
+                                    <td>{{ car.name }}</td>
+                                    <td>
+                                        <!-- Trigger/Edit Button -->
+                                        <button type="button" class="btn btn-primary" data-bs-toggle="modal"
+                                            data-bs-target="#editCarModal{{ car.id }}">
+                                            <i class="fa-solid fa-pen-to-square"></i>
+                                        </button>
+                                        <!-- Delete Button -->
+                                        <form method="post" action="{{ url_for('delete_car', id=car.id) }}">
+                                            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                                            <input type="hidden" name="_method" value="DELETE">
+                                            <button type="submit" class="btn btn-danger"><i
+                                                    class="fa-solid fa-trash"></i></button>
+                                        </form>
+                                    </td>
+                                </tr>
+                                {% if car %}
+                                {% include 'admin/edit_car.html' %}
+                                {% endif %}
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- Hoverable rows end -->
+<script>
+    window.addEventListener('DOMContentLoaded', (event) => {
+        const urlParams = new URLSearchParams(window.location.search);
+        const openModal = urlParams.get('open_modal');
+        if (openModal) {
+            const modalToOpen = new bootstrap.Modal(document.getElementById('editCarModal' + openModal));
+            modalToOpen.show();
+        }
+    });
+</script>
+{% endblock %}

@@ -10,7 +10,12 @@ venv/
 ENV/
 env.bak/
 venv.bak/
-.flaskenv
 
 # PyCharm
 .idea/
+
+# crawler jpg
+crawler/
+
+# origon css and componet
+others

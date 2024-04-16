@@ -1,0 +1,140 @@
+<div class="modal fade" id="editCarModal{{ car.id }}" tabindex="-1" aria-labelledby="editCarModalLabel{{ car.id }}"
+    aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form method="POST" action="{{ url_for('edit_car', id=car.id) }}">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="editCarModalLabel{{ car.id }}">Edit Car
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                {% for category, message in messages %}
+                <div class="alert {{ category }}">{{ message }}</div>
+                {% endfor %}
+                {% endif %}
+                {% endwith %}
+
+                {% block content %} {% endblock %}
+
+                <!-- <div class="modal-body"> -->
+                <div class="card">
+                    <div class="card-content">
+                        <div class="card-body">
+                            <form class="form form-vertical">
+                                <div class="form-body">
+                                    <div class="row">
+                                        <div class="col-12">
+                                            <div class="form-group">
+
+                                                <label for="id{{ car.id }}" class="form-label">id</label>
+                                                <input type="text" class="form-control" id="id{{ car.id }}" name="id"
+                                                    value="{{ car.id }}">
+                                            </div>
+                                        </div>
+                                        <div class="col-12">
+                                            <div class="form-group">
+                                                <label for="name{{ car.name }}" class="form-label">Name</label>
+                                                <input type="text" class="form-control" id="name{{ car.name }}"
+                                                    name="name" value="{{ car.name }}">
+                                            </div>
+                                        </div>
+                                        <div class="col-12">
+                                            <div class="form-group">
+                                                <label for="brand{{ car.brand }}" class="form-label">Brand</label>
+                                                <input type="text" class="form-control" id="brand{{ car.brand }}"
+                                                    name="brand" value="{{ car.brand }}">
+                                            </div>
+                                        </div>
+                                        <div class="col-12">
+                                            <div class="form-group">
+                                                <label for="model{{ car.model }}" class="form-label">Model</label>
+                                                <input type="text" class="form-control" id="model{{ car.model }}"
+                                                    name="model" value="{{ car.model }}">
+                                            </div>
+                                        </div>
+                                        <div class="col-12">
+                                            <div class="form-group">
+                                                <label for="year{{ car.year }}" class="form-label">Year</label>
+                                                <input type="text" class="form-control" id="year{{ car.year }}"
+                                                    name="year" value="{{ car.year }}">
+                                            </div>
+                                        </div>
+                                        <div class="col-12">
+                                            <div class="form-group">
+                                                <label for="body{{ car.body }}" class="form-label">Body</label>
+                                                <input type="text" class="form-control" id="body{{ car.body }}"
+                                                    name="body" value="{{ car.body }}">
+                                            </div>
+                                        </div>
+                                        <div class="col-12">
+                                            <div class="form-group">
+                                                <label for="door{{ car.door }}" class="form-label">Door</label>
+                                                <input type="text" class="form-control" id="door{{ car.door }}"
+                                                    name="door" value="{{ car.door }}">
+                                            </div>
+                                        </div>
+                                        <div class="col-12">
+                                            <div class="form-group">
+                                                <label for="seat{{ car.seat }}" class="form-label">Seat</label>
+                                                <input type="text" class="form-control" id="seat{{ car.seat }}"
+                                                    name="seat" value="{{ car.seat }}">
+                                            </div>
+                                        </div>
+                                        <div class="col-12">
+                                            <div class="form-group">
+                                                <label for="displacement{{ car.displacement }}"
+                                                    class="form-label">Displacement</label>
+                                                <input type="text" class="form-control"
+                                                    id="displacement{{ car.displacement }}" name="displacement"
+                                                    value="{{ car.displacement }}">
+                                            </div>
+                                        </div>
+                                        <div class="col-12">
+                                            <div class="form-group">
+                                                <label for="car_length{{ car.car_length }}" class="form-label">Car
+                                                    length</label>
+                                                <input type="text" class="form-control"
+                                                    id="car_length{{ car.car_length }}" name="car_length"
+                                                    value="{{ car.car_length }}">
+                                            </div>
+                                        </div>
+                                        <div class="col-12">
+                                            <div class="form-group">
+                                                <label for="wheelbase{{ car.wheelbase }}" class="form-label">Wheelbase
+                                                </label>
+                                                <input type="text" class="form-control"
+                                                    id="wheelbase{{ car.wheelbase }}" name="wheelbase"
+                                                    value="{{ car.wheelbase }}">
+                                            </div>
+                                        </div>
+                                        <div class="col-12">
+                                            <div class="form-group">
+                                                <label for="power_type{{ car.power_type }}" class="form-label">Power
+                                                    type</label>
+                                                <input type="text" class="form-control"
+                                                    id="power_type{{ car.power_type }}" name="power_type"
+                                                    value="{{ car.power_type }}">
+                                            </div>
+                                        </div>
+
+
+
+                                        <div class="col-12 d-flex justify-content-end">
+                                            <button type="submit" class="btn btn-primary me-1 mb-1">Submit</button>
+                                            <button type="reset"
+                                                class="btn btn-light-secondary me-1 mb-1">Reset</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+            </form>
+        </div>
+    </div>
+</div>

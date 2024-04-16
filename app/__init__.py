@@ -1,6 +1,18 @@
+from flask_sqlalchemy import SQLAlchemy
 from flask import Flask
+from flask_migrate import Migrate
+from dotenv import load_dotenv
+from config import Config
+from flask_wtf import CSRFProtect
+
+load_dotenv()
 
 app = Flask(__name__)
+app.config.from_object(Config)
+csrf = CSRFProtect(app)
+db = SQLAlchemy(app)
+migrate = Migrate(app, db)
+
 
 
 # 使用flask run目前這段程式碼沒有效益
@@ -8,5 +20,5 @@ app = Flask(__name__)
 # if __name__ == "__main__":
 #     app.run(debug=True, port=5001)
 
-from app import routes
+from app import routes, models
 

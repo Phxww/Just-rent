@@ -1,0 +1,24 @@
+/* message flash */
+.alert {
+  padding: 10px;
+  color: white;
+  margin-bottom: 15px;
+  display: block;
+}
+
+.alert.info {
+  background-color: #17a2b8; /* Bootstrap info blue */
+}
+
+.alert.success {
+  background-color: #28a745; /* Bootstrap success green */
+}
+
+.alert.error {
+  background-color: #dc3545; /* Bootstrap danger red */
+}
+
+.alert.warning {
+  background-color: #ffc107; /* Bootstrap warning yellow */
+  color: black; /* Ensure text is readable on a light background */
+}

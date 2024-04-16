@@ -1,0 +1,111 @@
+{% extends "admin/base.html" %}
+{% block content %}
+{% with messages = get_flashed_messages(with_categories=true) %}
+{% if messages %}
+{% for category, message in messages %}
+<div class="alert {{ category }}">{{ message }}</div>
+{% endfor %}
+{% endif %}
+{% endwith %}
+<div class="=content">
+    <!-- <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"> -->
+    <form method="POST" action="/admin/cars/new">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+
+        <div class="col-md-6 col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h4 class="card-title">新增汽車</h4>
+                </div>
+                <div class="card-content">
+                    <div class="card-body">
+                        <form class="form form-vertical">
+                            <div class="form-body">
+                                <div class="row">
+                                    <div class="col-12">
+                                        <div class="form-group">
+                                            <label for="name">名稱</label>
+                                            <input type="text" id="name" class="form-control" name="name"
+                                                placeholder="2023 Volvo XC40 Plus T2">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-12">
+                                    <div class="form-group">
+                                        <label for="brand">廠牌</label>
+                                        <input type="text" id="brand" class="form-control" name="brand"
+                                            placeholder="Volvo">
+                                    </div>
+                                </div>
+                                <div class="col-12">
+                                    <div class="form-group">
+                                        <label for="model">車款</label>
+                                        <input type="text" id="model" class="form-control" name="model"
+                                            placeholder="XC40">
+                                    </div>
+                                </div>
+                                <div class="col-12">
+                                    <div class="form-group">
+                                        <label for="year">年份</label>
+                                        <input type="number" id="year" class="form-control" name="year"
+                                            placeholder="2023">
+                                    </div>
+                                </div>
+                                <div class="col-12">
+                                    <div class="form-group">
+                                        <label for="body">車身型式</label>
+                                        <input type="text" id="body" class="form-control" name="body"
+                                            placeholder="跨界休旅車">
+                                    </div>
+                                </div>
+                                <div class="col-12">
+                                    <div class="form-group">
+                                        <label for="door">車門數</label>
+                                        <input type="text" id="door" class="form-control" name="door" placeholder="5門">
+                                    </div>
+                                </div>
+                                <div class="col-12">
+                                    <div class="form-group">
+                                        <label for="seat">座位數</label>
+                                        <input type="text" id="seat" class="form-control" name="seat" placeholder="5人座">
+                                    </div>
+                                </div>
+                                <div class="col-12">
+                                    <div class="form-group">
+                                        <label for="displacement">排氣量</label>
+                                        <input type="text" id="displacement" class="form-control" name="displacement"
+                                            placeholder="1969cc ">
+                                    </div>
+                                </div>
+                                <div class="col-12">
+                                    <div class="form-group">
+                                        <label for="car_length">車長</label>
+                                        <input type="text" id="car_length" class="form-control" name="car_length"
+                                            placeholder="4480mm">
+                                    </div>
+                                </div>
+                                <div class="col-12">
+                                    <div class="form-group">
+                                        <label for="wheelbase">軸距</label>
+                                        <input type="text" id="wheelbase" class="form-control" name="wheelbase"
+                                            placeholder="2530mm">
+                                    </div>
+                                </div>
+                                <div class="col-12">
+                                    <div class="form-group">
+                                        <label for="power_type">動力型式</label>
+                                        <input type="text" id="power_type" class="form-control" name="power_type"
+                                            placeholder="汽油">
+                                    </div>
+                                </div>
+
+
+                                <div class="col-12 d-flex justify-content-end">
+                                    <button type="submit" class="btn btn-primary me-1 mb-1">Submit</button>
+                                    <button type="reset" class="btn btn-light-secondary me-1 mb-1">Reset</button>
+                                </div>
+                            </div>
+                    </div>
+    </form>
+</div>
+{% endblock %}
