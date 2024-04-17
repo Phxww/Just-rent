@@ -11,31 +11,75 @@ def home():
     return render_template("index.html")
 
 # 汽車頁面
+
+
 @app.route("/cars")
 def view_cars():
     return render_template("cars.html")
 
 # 單一汽車頁面
+
+
 @app.route('/cars/<int:car_id>')
 def view_spec_car(car_id):
     return render_template('car-single.html', car_id=car_id)
 
 # 使用者登入
-@app.route('/login')
+
+
+@app.route('/login', methods=['GET', 'POST'])
 def login():
+    if request.method == 'POST':
+        email = request.form.get('email')
+        password = request.form.get('password')
+        if not email or not password:
+            flash('email and password are required!')
+            return redirect(url_for('login'))
+        
+        user = User.query.filter_by(email=email).first()
+        if user and user.check_password(password):
+            return redirect(url_for('home'))
+        else:
+            flash('Invalid username or password')
+            return redirect(url_for('login'))
+
     return render_template('login.html')
 
 
 # 使用者註冊
-@app.route('/signup')
+@app.route('/signup', methods=['GET', 'POST'])
 def signup():
+    if request.method == 'POST':
+        username = request.form.get('username')
+        email = request.form.get('email')
+        password = request.form.get('password')
+        if not username or not email or not password:
+            flash('Username, email, and password are required!')
+            return redirect(url_for('signup'))
+
+        if User.query.filter_by(username=username).first():
+            flash('Username already taken')
+            return redirect(url_for('signup'))
+
+        if User.query.filter_by(email=email).first():
+            flash('Email already in use')
+            return redirect(url_for('signup'))
+
+        new_user = User(username=username, email=email)
+        new_user.set_password(password)
+
+        db.session.add(new_user)
+        db.session.commit()
+
+        flash('Registration successful')
+        return redirect(url_for('login'))
     return render_template('register.html')
-
-
 
 # ==== api ====
 
 # 瀏覽所有汽車
+
+
 @app.route("/api/cars")
 def cars():
     brand = request.args.get("brand")
@@ -49,7 +93,7 @@ def cars():
     # 以字典返回資料
     cars_list = [
         {"id": car.id,
-        "name": car.name,
+         "name": car.name,
          "brand": car.brand,
          "year": car.year,
          "model": car.model}
