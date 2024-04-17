@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="h-100">
+    <div class="container py-5 h-100">
+        <div class="row d-flex justify-content-center align-items-center h-100">
+            <div class="col-lg-8 col-xl-6">
+                <div class="card rounded-3">
+                    <div class="card-body p-4 p-md-5">
+                        <h3 class="mb-4 text-center">Sign up</h3>
+
+                        <form class="px-md-2">
+
+                            <div data-mdb-input-init class="form-outline mb-4">
+                                <label class="form-label" for="name">Name</label>
+                                <input type="text" id="name" class="form-control" />
+                            </div>
+                            <div data-mdb-input-init class="form-outline mb-4">
+                                <label class="form-label" for="email">Email</label>
+                                <input type="email" id="email" class="form-control" />
+                            </div>
+                            <div data-mdb-input-init class="form-outline mb-4">
+                                <label class="form-label" for="password">Password</label>
+                                <input type="text" id="password" class="form-control" />
+                            </div>
+                            <div data-mdb-input-init class="form-outline mb-4">
+                                <label class="form-label" for="checkedPassword">Checked Password</label>
+                                <input type="text" id="checkedPassword" class="form-control" />
+                            </div>
+
+                            <div class="text-center">
+                                <button type="submit" data-mdb-button-init data-mdb-ripple-init
+                                    class="btn btn-success btn-lg mb-1">Submit</button>
+                            </div>
+
+                        </form>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

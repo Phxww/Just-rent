@@ -10,15 +10,27 @@ from app.utilities.helpers import clean_input
 def home():
     return render_template("index.html")
 
-
+# 汽車頁面
 @app.route("/cars")
 def view_cars():
     return render_template("cars.html")
 
-
+# 單一汽車頁面
 @app.route('/cars/<int:car_id>')
 def view_spec_car(car_id):
     return render_template('car-single.html', car_id=car_id)
+
+# 使用者登入
+@app.route('/login')
+def login():
+    return render_template('login.html')
+
+
+# 使用者註冊
+@app.route('/signup')
+def signup():
+    return render_template('register.html')
+
 
 
 # ==== api ====
