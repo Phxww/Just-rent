@@ -6,9 +6,9 @@
         <!-- Sidebar Section -->
         <div class="col-md-3">
             <div class="d-flex flex-column align-items-center text-center p-3 py-5">
-                <img id="avatar" class="rounded-circle mt-5" width="150px" src="https://i.pravatar.cc/300" alt="User" />
-                <span class="font-weight-bold">Monica Lucas</span>
-                <span class="text-black-50">monica@crentaly.com</span>
+                <img id="avatar" class="rounded-circle mt-5" width="150px" src="{{user.avatar(user.id)}}" alt="User" />
+                <span id='img_username' class="font-weight-bold"></span>
+                <span id='img_email' class="text-black-50"></span>
                 <div class="mt-3">
                     <a href="/profile">
                         <button class="mt-3 btn btn-outline-primary">My Profile</button><br>
@@ -26,4 +26,5 @@
         {% include template %}
     </div>
 </div>
+<script src="{{ url_for('static', filename='js/user-profile.js') }}"></script>
 {% endblock %}

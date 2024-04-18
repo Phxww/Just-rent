@@ -1,10 +1,16 @@
-from app import app, db
+from app import app, db, login
 from flask import render_template, request, jsonify, flash, redirect, url_for
 from app.models import User, Car
 from app.utilities.helpers import clean_input
+from flask_login import login_user, logout_user, current_user, login_required
+
+
+@login.user_loader
+def user_loader(id):
+    return db.session.get(User, int(id))
+
 
 # 前端渲染
-
 
 @app.route("/")
 def home():
@@ -14,8 +20,9 @@ def home():
 
 
 @app.route("/cars")
+# @login_required
 def view_cars():
-    return render_template("cars.html")
+    return render_template('cars.html')
 
 # 單一汽車頁面
 
@@ -36,9 +43,11 @@ def login():
         if not email or not password:
             flash('email and password are required!')
             return redirect(url_for('login'))
-        
+
         user = User.query.filter_by(email=email).first()
         if user and user.check_password(password):
+            # 驗證完成之後，透過login_user來記錄user_id
+            login_user(user)
             return redirect(url_for('home'))
         else:
             flash('Invalid username or password')
@@ -76,10 +85,27 @@ def signup():
         return redirect(url_for('login'))
     return render_template('register.html')
 
-# 個人自我介紹
-@app.route("/profile")
+# 個人資訊
+
+
+@app.route("/profile", methods=['GET', 'POST'])
+@login_required
 def profile():
-    return render_template('profile.html',template='_profile.html')
+    if request.method == 'POST':
+        username = request.form.get('username')
+        email = request.form.get('email')
+        if not username or not email:
+            return jsonify({'error': 'Username and email are required!'}), 400
+
+        # Update current_user instance
+        current_user.username = username
+        current_user.email = email
+        db.session.commit()
+
+        # return jsonify({'message': 'Profile updated successfully'}), 200
+        return render_template('profile.html', template='_profile.html', user=current_user)
+     # For GET request
+    return render_template('profile.html', template='_profile.html', user=current_user)
 
 
 @app.route("/profile/orders")
@@ -94,9 +120,18 @@ def favorites():
 
 # ==== api ====
 
-# 瀏覽所有汽車
+# 個人資訊
+@app.route('/api/user_profile')
+@login_required
+def user_profile_api():
+    # Assuming user data is stored in a dictionary format in `current_user`
+    return jsonify({
+        'username': current_user.username,
+        'email': current_user.email
+    })
 
 
+# 所有汽車
 @app.route("/api/cars")
 def cars():
     brand = request.args.get("brand")
