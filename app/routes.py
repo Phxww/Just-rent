@@ -24,6 +24,7 @@ def view_cars():
 def view_spec_car(car_id):
     return render_template('car-single.html', car_id=car_id)
 
+
 # 使用者登入
 
 
@@ -74,6 +75,22 @@ def signup():
         flash('Registration successful')
         return redirect(url_for('login'))
     return render_template('register.html')
+
+# 個人自我介紹
+@app.route("/profile")
+def profile():
+    return render_template('profile.html',template='_profile.html')
+
+
+@app.route("/profile/orders")
+def orders():
+    return render_template('profile.html', template='_orders.html')
+
+
+@app.route("/profile/favorites")
+def favorites():
+    return render_template('profile.html', template='_favorites.html')
+
 
 # ==== api ====
 
