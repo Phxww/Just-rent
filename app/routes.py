@@ -148,7 +148,9 @@ def cars():
          "name": car.name,
          "brand": car.brand,
          "year": car.year,
-         "model": car.model}
+         "model": car.model,
+         "isLiked": car in current_user.liked_cars
+         }
         for car in cars
     ]
 
@@ -304,6 +306,51 @@ def delete_car(id):
             str(e)), 'error')  # Provide error message
         # Optionally redirect back to the same page or error page
         return redirect(url_for('admin_cars'))
+
+
+# 喜歡汽車
+@app.route('/api/like_car/<int:car_id>', methods=['POST'])
+@login_required
+def like_car(car_id):
+    user_id = current_user.id
+    user = User.query.get(user_id)
+    print(user.liked_cars)
+    car = Car.query.get(car_id)
+    print(car)
+
+    if not user or not car:
+        return jsonify({"error": "User or Car not found"}), 404
+
+    if car in user.liked_cars:
+        return jsonify({"message": "Car already liked by user"}), 400
+
+    user.liked_cars.append(car)
+    db.session.commit()
+    return jsonify({"message": "Car liked successfully"}), 200
+
+# 不喜歡汽車
+
+
+@app.route('/api/unlike_car/<int:car_id>', methods=['POST'])
+@login_required
+def unlike_car(car_id):
+    user_id = current_user.id
+    print(user_id)
+    user = User.query.get(user_id)
+    car = Car.query.get(car_id)
+
+    if not user or not car:
+        return jsonify({"error": "User or Car not found"}), 404
+
+    if car not in user.liked_cars:
+        return jsonify({"message": "Car not liked by user"}), 400
+
+    user.liked_cars.remove(car)
+    db.session.commit()
+    return jsonify({"message": "Car unliked successfully"}), 200
+
+# 使用者喜歡的汽車
+
 
 
 @app.route('/admin/users')

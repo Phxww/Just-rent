@@ -2,6 +2,12 @@ from app import db
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import UserMixin
 
+# an association table to link users and cars.
+likes = db.Table('likes',
+    db.Column('user_id', db.Integer, db.ForeignKey('users.id'), primary_key=True),
+    db.Column('car_id', db.Integer, db.ForeignKey('cars.id'), primary_key=True),
+    db.Column('liked_at', db.DateTime, default=db.func.current_timestamp())
+)
 
 class User(UserMixin,db.Model):
     __tablename__ = "users"
@@ -9,6 +15,8 @@ class User(UserMixin,db.Model):
     username = db.Column(db.String(255), unique=True, nullable=False)
     email = db.Column(db.String(255), unique=True, nullable=False)
     password_hash = db.Column(db.String(255), nullable=False)
+    liked_cars = db.relationship('Car', secondary=likes,
+                                 backref=db.backref('liked_by', lazy='dynamic'))
 
     def set_password(self, password):
         self.password_hash = generate_password_hash(password)
@@ -18,8 +26,6 @@ class User(UserMixin,db.Model):
     
     def avatar(self, id):
         return f'https://i.pravatar.cc/300?img={id}'
-
-
 
 class Car(db.Model):
     __tablename__ = "cars"
