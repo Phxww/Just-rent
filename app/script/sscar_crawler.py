@@ -15,6 +15,7 @@ def sscar_crawler(url):
             'a', class_='woocommerce-LoopProduct-link woocommerce-loop-product__link').text
         product_url = product.find(
             'a', class_='woocommerce-LoopProduct-link woocommerce-loop-product__link')['href']
+        # print(product_name)
 
         # 檢查 URL 是否已經處理過，避免資料重複
         if product_url not in seen_urls:
@@ -37,18 +38,31 @@ def get_yahoo_link(url):
 
 
 def main():
-    url = "https://sscars.com.tw/car/page/2/"
-    cars_list = sscar_crawler(url)
+    base_url = "https://sscars.com.tw/car/page/"
+    pages = [1,2,3]  # The pages need to parse
+    all_cars_list = []
 
-    # 爬完的小施汽車獲得name和url後，再由url獲得yahoo短網址
-    for car in cars_list:
-        car_url = car['url']
-        if car_url:
-            car['short_link'] = get_yahoo_link(car_url)
+    for page in pages:
+        page_url = f"{base_url}{page}/"
+        print(f"Crawling page {page}...")
+        cars_list = sscar_crawler(page_url)
+        # print(f"Page {page} collected {len(cars_list)} unique car entries after deduplication.")
+
+        # 爬完的小施汽車獲得name和url後，再由url獲得yahoo短網址
+        for car in cars_list:
+            car_url = car['url']
+            if car_url:
+                car['short_link'] = get_yahoo_link(car_url)
+            else:
+                car['short_link'] = None
+
+        all_cars_list.extend(cars_list)
 
     # 存為json檔
     with open("app/script/car_list.json", 'w', encoding='utf-8') as f:
-        json.dump(cars_list, f)
+        json.dump(all_cars_list, f)
+        
+    print(f"Total {len(all_cars_list)} unique car entries collected across all pages.")
 
 
 if __name__ == "__main__":
