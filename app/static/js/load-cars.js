@@ -2,7 +2,7 @@ fetch("/api/cars")
   .then((response) => response.json())
   .then((data) => {
     const carsContainer = document.getElementById("cars-container");
-    data.forEach((car) => {
+    data.cars.forEach((car) => {
       const carHtml = `
         <div class="col-lg-3 col-md-6 mb-4">
           <div class="card">
@@ -26,5 +26,13 @@ fetch("/api/cars")
         `;
       carsContainer.innerHTML += carHtml;
     });
+ // Setup click handlers if not authenticated
+    if (!data.isAuthenticated) {
+      document.querySelectorAll(".like-icon").forEach(icon => {
+        icon.addEventListener("click", function() {
+          window.location.href = "/login";
+        });
+      });
+    }
   })
-  .catch((error) => console.error("Error fetching cars:", error));
+  .catch(error => console.error("Error fetching cars:", error));
