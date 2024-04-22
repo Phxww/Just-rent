@@ -14,7 +14,7 @@ def user_loader(id):
 
 @app.route("/")
 def home():
-    return render_template("index.html")
+    return render_template("index.html", user=current_user)
 
 # 汽車頁面
 
@@ -22,14 +22,14 @@ def home():
 @app.route("/cars")
 # @login_required
 def view_cars():
-    return render_template('cars.html')
+    return render_template('cars.html', user=current_user)
 
 # 單一汽車頁面
 
 
 @app.route('/cars/<int:car_id>')
 def view_spec_car(car_id):
-    return render_template('car-single.html', car_id=car_id)
+    return render_template('car-single.html', car_id=car_id, user=current_user)
 
 
 # 使用者登入
@@ -55,6 +55,13 @@ def login():
 
     return render_template('login.html')
 
+# 使用者登出
+
+
+@app.route('/logout')
+def logout():
+    logout_user()
+    return redirect(url_for('login'))
 
 # 使用者註冊
 @app.route('/signup', methods=['GET', 'POST'])
@@ -149,13 +156,16 @@ def cars():
          "brand": car.brand,
          "year": car.year,
          "model": car.model,
-         "isLiked": car in current_user.liked_cars
-         }
-        for car in cars
+         "isLiked": car in current_user.liked_cars if current_user.is_authenticated else None
+         } for car in cars
     ]
+    response = {
+        "cars": cars_list,
+        "isAuthenticated": current_user.is_authenticated
+    }
 
     # 以 JSON 格式回傳
-    return jsonify(cars_list)
+    return jsonify(response)
 
 
 @app.route("/api/cars/pop")

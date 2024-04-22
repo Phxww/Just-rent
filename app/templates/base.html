@@ -42,9 +42,17 @@
                     </li>
                     <li>
                         <div class="d-flex ms-3">
+                            {% if current_user.is_anonymous %}
                             <a href="/login">
-                            <button class="btn btn-outline-success login-btn" type="text">Login</button>
+                                <button class="btn btn-outline-success login-btn" type="text">Login</button>
                             </a>
+                            {% else %}
+                            <a href="{{ url_for('profile')}}"> <img id="avatar" class="rounded-circle me-3" width="50px" src="{{user.avatar(user.id)}}" alt="User" />
+                            </a>
+                            <a href="/logout">
+                                <button class="btn btn-outline-success logout-btn" type="text">Logout</button>
+                            </a>
+                            {% endif %}
                         </div>
                     </li>
                 </ul>
