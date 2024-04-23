@@ -140,16 +140,33 @@ def user_profile_api():
 
 # 所有汽車
 @app.route("/api/cars")
+# `/api/cars?page=${page}`
 def cars():
-    brand = request.args.get("brand")
-    if brand:
-        # 從資料庫撈出指定的廠牌
-        cars = Car.query.filter_by(brand=brand).all()
-    else:
-        # 如果沒有指定廠牌，就撈出所有資料
-        cars = Car.query.all()
+    page = request.args.get('page', 1, type=int)
+    per_page = request.args.get('per_page', 12, type=int)
+    brand = request.args.get('brand')
+    doors = request.args.get('doors')
+    seats = request.args.get('seats')
+    power_type = request.args.get('power_type')
+    displacement = request.args.get('displacement')
 
-    # 以字典返回資料
+    query = Car.query
+    if brand:
+        query = query.filter(Car.brand == brand)
+    if doors:
+        query = query.filter(Car.door == doors)
+    if seats:
+        query = query.filter(Car.seat == seats)
+    if power_type:
+        query = query.filter(Car.power_type == power_type)
+    if displacement:
+        query = query.filter(Car.displacement == displacement)
+
+    pagination = query.paginate(page=page, per_page=per_page, error_out=False)
+    cars = pagination.items  # Access the paginated items
+
+    # cars = Car.query.all()
+
     cars_list = [
         {"id": car.id,
          "name": car.name,
@@ -161,7 +178,13 @@ def cars():
     ]
     response = {
         "cars": cars_list,
-        "isAuthenticated": current_user.is_authenticated
+        "isAuthenticated": current_user.is_authenticated,
+        "total_pages": pagination.pages,
+        "current_page": pagination.page,
+        "has_next": pagination.has_next,
+        "has_prev": pagination.has_prev,
+        "next_num": pagination.next_num,
+        "prev_num": pagination.prev_num
     }
 
     # 以 JSON 格式回傳
@@ -205,6 +228,26 @@ def car_spec_api(car_id):
     return jsonify(car_data)
 
 
+# 過濾條件
+@app.route('/api/brand')
+def get_brands():
+    brands = Car.query.with_entities(Car.brand).distinct().all()
+    return jsonify([brand[0] for brand in brands])
+
+
+@app.route('/api/seat')
+def get_seat():
+    seats = Car.query.with_entities(Car.seat).distinct().all()
+    return jsonify([seat[0] for seat in seats])
+
+
+@app.route('/api/door')
+def get_door():
+    doors = Car.query.with_entities(Car.door).distinct().all()
+    return jsonify([door[0] for door in doors])
+
+
+
 # ==== admin ====
 # 瀏覽汽車
 @app.route('/admin', methods=['GET'])
@@ -216,6 +259,7 @@ def home_car():
 def admin_cars():
     cars = Car.query.all()
     return render_template('admin/cars.html', cars=cars)
+    
 
 
 # 編輯汽車
