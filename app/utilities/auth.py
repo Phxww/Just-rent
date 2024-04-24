@@ -17,7 +17,19 @@ def admin_required(f):
     def decorated_function(*args, **kwargs):
         # Check if user is logged in and if they are an admin
         if not current_user.is_authenticated or current_user.role != UserRole.ADMIN:
-            flash('You do not have permission to view this page.', 'warning')
+            # flash('You do not have permission to view this page.', 'warning')
             return redirect(url_for('view_cars'))  # Redirect to a safe page
         return f(*args, **kwargs)  # Run the actual route function
+    return decorated_function
+
+def user_only(f):
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        # Check if user is logged in and if they are an admin
+        if current_user.is_authenticated and current_user.role == UserRole.ADMIN:
+            # Optional: flash a message if you want to inform the user
+            # flash('Admins do not have access to this page.', 'warning')
+            # Redirect admins to an admin-specific page
+            return redirect(url_for('admin_cars'))
+        return f(*args, **kwargs)  # Run the actual route function for non-admins
     return decorated_function

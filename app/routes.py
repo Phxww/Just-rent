@@ -2,7 +2,7 @@ from app import app, db, login
 from flask import render_template, request, jsonify, flash, redirect, url_for
 from app.models import User, Car
 from app.utilities.helpers import clean_input
-from app.utilities.auth import admin_required
+from app.utilities.auth import admin_required, user_only
 from flask_login import login_user, logout_user, current_user, login_required
 from enum import Enum, unique
 
@@ -19,6 +19,7 @@ def user_loader(id):
 # 前端渲染
 
 @app.route("/")
+@user_only
 def home():
     return render_template("index.html", user=current_user)
 
@@ -26,7 +27,7 @@ def home():
 
 
 @app.route("/cars")
-# @login_required
+@user_only
 def view_cars():
     return render_template('cars.html', user=current_user)
 
@@ -34,6 +35,7 @@ def view_cars():
 
 
 @app.route('/cars/<int:car_id>')
+@user_only
 def view_spec_car(car_id):
     return render_template('car-single.html', car_id=car_id, user=current_user)
 
@@ -112,6 +114,7 @@ def signup():
 
 @app.route("/profile", methods=['GET', 'POST'])
 @login_required
+@user_only
 def profile():
     if request.method == 'POST':
         username = request.form.get('username')
@@ -131,11 +134,15 @@ def profile():
 
 
 @app.route("/profile/orders")
+@login_required
+@user_only
 def orders():
     return render_template('profile.html', template='_orders.html',user=current_user)
 
 
 @app.route("/profile/favorites")
+@login_required
+@user_only
 def favorites():
     return render_template('profile.html', template='_favorites.html',user=current_user)
 
@@ -352,6 +359,8 @@ def admin_cars():
 
 # 編輯汽車
 @app.route('/admin/cars/<int:id>', methods=['GET', 'POST'])
+@login_required
+@admin_required
 def edit_car(id):
     car = Car.query.get_or_404(id)
     if request.method == "POST":
@@ -389,6 +398,8 @@ def edit_car(id):
 
 
 @app.route('/admin/cars/new', methods=['GET', 'POST'])
+@login_required
+@admin_required
 def new_car():
     if request.method == 'POST':
         # Extract information from form
@@ -433,6 +444,8 @@ def new_car():
 
 # Change to POST if using forms
 @app.route('/admin/cars/<int:id>/delete', methods=['POST'])
+@login_required
+@admin_required
 def delete_car(id):
     car = Car.query.get_or_404(id)
 
@@ -451,6 +464,8 @@ def delete_car(id):
 
 
 @app.route('/admin/users')
+@login_required
+@admin_required
 def admin_users():
     users = User.query.all()
     return render_template('admin/users.html',users=users)
