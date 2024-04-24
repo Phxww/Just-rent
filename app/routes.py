@@ -2,8 +2,14 @@ from app import app, db, login
 from flask import render_template, request, jsonify, flash, redirect, url_for
 from app.models import User, Car
 from app.utilities.helpers import clean_input
+from app.utilities.auth import admin_required
 from flask_login import login_user, logout_user, current_user, login_required
+from enum import Enum, unique
 
+@unique
+class UserRole(Enum):
+    USER = "user"
+    ADMIN = "admin"
 
 @login.user_loader
 def user_loader(id):
@@ -37,6 +43,8 @@ def view_spec_car(car_id):
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
+    if current_user.is_authenticated:
+        return redirect(url_for('view_cars'))
     if request.method == 'POST':
         email = request.form.get('email')
         password = request.form.get('password')
@@ -48,7 +56,14 @@ def login():
         if user and user.check_password(password):
             # 驗證完成之後，透過login_user來記錄user_id
             login_user(user)
-            return redirect(url_for('home'))
+            if current_user.role.value == UserRole.ADMIN.value:
+                # Redirect admins to the admin dashboard
+                return redirect(url_for('admin_cars'))
+            else:
+            # Redirect regular users to the user dashboard
+                # print(current_user.role)
+                # print(UserRole.USER.value)
+                return redirect(url_for('view_cars'))
         else:
             flash('Invalid username or password')
             return redirect(url_for('login'))
@@ -117,12 +132,12 @@ def profile():
 
 @app.route("/profile/orders")
 def orders():
-    return render_template('profile.html', template='_orders.html')
+    return render_template('profile.html', template='_orders.html',user=current_user)
 
 
 @app.route("/profile/favorites")
 def favorites():
-    return render_template('profile.html', template='_favorites.html')
+    return render_template('profile.html', template='_favorites.html',user=current_user)
 
 
 # ==== api ====
@@ -246,21 +261,94 @@ def get_door():
     doors = Car.query.with_entities(Car.door).distinct().all()
     return jsonify([door[0] for door in doors])
 
+# 喜歡汽車
 
 
-# ==== admin ====
+@app.route('/api/like_car/<int:car_id>', methods=['POST'])
+@login_required
+def like_car(car_id):
+    user_id = current_user.id
+    user = User.query.get(user_id)
+    print(user.liked_cars)
+    car = Car.query.get(car_id)
+    print(car)
+
+    if not user or not car:
+        return jsonify({"error": "User or Car not found"}), 404
+
+    if car in user.liked_cars:
+        return jsonify({"message": "Car already liked by user"}), 400
+
+    user.liked_cars.append(car)
+    db.session.commit()
+    return jsonify({"message": "Car liked successfully"}), 200
+
+# 不喜歡汽車
+
+
+@app.route('/api/unlike_car/<int:car_id>', methods=['POST'])
+@login_required
+def unlike_car(car_id):
+    user_id = current_user.id
+    print(user_id)
+    user = User.query.get(user_id)
+    car = Car.query.get(car_id)
+
+    if not user or not car:
+        return jsonify({"error": "User or Car not found"}), 404
+
+    if car not in user.liked_cars:
+        return jsonify({"message": "Car not liked by user"}), 400
+
+    user.liked_cars.remove(car)
+    db.session.commit()
+    return jsonify({"message": "Car unliked successfully"}), 200
+
+
+
+# 使用者喜歡的汽車
+@app.route('/api/favorites', methods=['GET'])
+@login_required
+def user_favorites():
+    user_id = current_user.id
+    user = User.query.get(user_id)
+    if not user:
+        return jsonify({'error': 'User not found'}), 404
+    liked_cars = user.liked_cars
+    print(liked_cars)
+    cars_list = [
+        {'id': car.id, 'name': car.name}
+        for car in liked_cars
+    ]
+    return jsonify(cars_list)
+
+
+# ============================
+# ========== admin ===========
+# ============================
+
 # 瀏覽汽車
-@app.route('/admin', methods=['GET'])
-def home_car():
-    return redirect(url_for('admin_cars'))
+# @app.route('/admin', methods=['GET'])
+# @login_required
+# def home_car():
+#     # if current_user.role.value == UserRole.ADMIN.value:
+#     #     return redirect(url_for('admin_cars'))
+#     # # Redirect non-admins to the user cars page
+#     # return redirect(url_for('view_cars'))
+#     return redirect(url_for('admin_cars'))
 
-
+@app.route('/admin')
 @app.route('/admin/cars')
+@login_required
+@admin_required
 def admin_cars():
     cars = Car.query.all()
+    # if current_user.role.value == UserRole.ADMIN.value:
+    #     return render_template('admin/cars.html', cars=cars)
+    # return redirect(url_for('view_cars'))
     return render_template('admin/cars.html', cars=cars)
-    
 
+    
 
 # 編輯汽車
 @app.route('/admin/cars/<int:id>', methods=['GET', 'POST'])
@@ -362,54 +450,10 @@ def delete_car(id):
         return redirect(url_for('admin_cars'))
 
 
-# 喜歡汽車
-@app.route('/api/like_car/<int:car_id>', methods=['POST'])
-@login_required
-def like_car(car_id):
-    user_id = current_user.id
-    user = User.query.get(user_id)
-    print(user.liked_cars)
-    car = Car.query.get(car_id)
-    print(car)
-
-    if not user or not car:
-        return jsonify({"error": "User or Car not found"}), 404
-
-    if car in user.liked_cars:
-        return jsonify({"message": "Car already liked by user"}), 400
-
-    user.liked_cars.append(car)
-    db.session.commit()
-    return jsonify({"message": "Car liked successfully"}), 200
-
-# 不喜歡汽車
-
-
-@app.route('/api/unlike_car/<int:car_id>', methods=['POST'])
-@login_required
-def unlike_car(car_id):
-    user_id = current_user.id
-    print(user_id)
-    user = User.query.get(user_id)
-    car = Car.query.get(car_id)
-
-    if not user or not car:
-        return jsonify({"error": "User or Car not found"}), 404
-
-    if car not in user.liked_cars:
-        return jsonify({"message": "Car not liked by user"}), 400
-
-    user.liked_cars.remove(car)
-    db.session.commit()
-    return jsonify({"message": "Car unliked successfully"}), 200
-
-# 使用者喜歡的汽車
-
-
-
 @app.route('/admin/users')
 def admin_users():
-    return render_template('admin/users.html')
+    users = User.query.all()
+    return render_template('admin/users.html',users=users)
 
 
 # test database

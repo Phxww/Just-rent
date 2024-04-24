@@ -1,6 +1,13 @@
 from app import db
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import UserMixin
+from enum import Enum, unique
+
+
+@unique
+class UserRole(Enum):
+    USER = "user"
+    ADMIN = "admin"
 
 # an association table to link users and cars.
 likes = db.Table('likes',
@@ -15,6 +22,7 @@ class User(UserMixin,db.Model):
     username = db.Column(db.String(255), unique=True, nullable=False)
     email = db.Column(db.String(255), unique=True, nullable=False)
     password_hash = db.Column(db.String(255), nullable=False)
+    role = db.Column(db.Enum(UserRole), default=UserRole.USER)
     liked_cars = db.relationship('Car', secondary=likes,
                                  backref=db.backref('liked_by', lazy='dynamic'))
 
