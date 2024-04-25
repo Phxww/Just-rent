@@ -107,6 +107,38 @@ footer {
   font-weight: bold; /* Optional: makes the discounted price more prominent */
 }
 
+/* 註冊登入 */
+.divider:after,
+.divider:before {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background: #eee;
+}
+.h-custom {
+  height: calc(100% - 73px);
+}
+
+
+/* 全部汽車頁面 */
+.like-icon {
+    cursor: pointer;
+    color: gray; /* Default color when not liked */
+    font-size: 24px; /* Adjust size as needed */
+}
+
+.like-icon.liked {
+    color: red; /* Red heart when liked */
+}
+
+
+/*
+@media (min-width: 1025px) {
+  .h-custom {
+    height: 100vh !important;
+  }
+} */
+
 /* Debugging Borders */
 /* .container,
 .carousel-inner,

@@ -5,55 +5,59 @@
     <div class="container">
         <div class="row">
             <!-- Filter sidebar -->
-            <div class="col-lg-3">
-                <div class="filter-group mb-3">
-                    <h4>車門數</h4>
-                    <div class="list-group">
-                        <label class="list-group-item">
-                            <input class="form-check-input me-1" type="checkbox" value="">
-                            4門
-                        </label>
-                        <label class="list-group-item">
-                            <input class="form-check-input me-1" type="checkbox" value="">
-                            5門
-                        </label>
-                        <!-- More filters... -->
-                    </div>
-                </div>
+            <div class="col-lg-2">
                 <!-- More filter groups... -->
                 <div class="filter-group mb-3">
-                    <h4>車身型式</h4>
-                    <div class="list-group">
-                        <label class="list-group-item">
-                            <input class="form-check-input me-1" type="checkbox" value="">
-                            掀背車
-                        </label>
-                        <label class="list-group-item">
-                            <input class="form-check-input me-1" type="checkbox" value="">
-                            轎車
-                        </label>
-                        <label class="list-group-item">
-                            <input class="form-check-input me-1" type="checkbox" value="">
-                            跨界休旅車
-                        </label>
-                        <!-- More filters... -->
-                    </div>
+                    <h4 class="mb-2">品牌</h4>
+                    <select id="brand-filter" class="form-select" onchange="loadPage(1)">
+                        <option value="">All Brands</option>
+                        <!-- Options will be dynamically populated here -->
+                    </select>
                 </div>
+                <div class="filter-group mb-3">
+                    <h4 class="mb-2">座位數</h4>
+                    <select id="seats-filter" class="form-select" onchange="loadPage(1)">
+                        <option value="">Any Seats</option>
+                        <!-- Dynamically populate seat options here -->
+                    </select>
+                </div>
+                <div class="filter-group mb-3">
+                    <h4 class="mb-2">車門數</h4>
+                    <select id="doors-filter" class="form-select" onchange="loadPage(1)">
+                        <option value="">Any Doors</option>
+                        <!-- Dynamically populate seat options here -->
+                    </select>
+                </div>
+
             </div>
 
             <!-- Car list -->
-            <div class="col-lg-9">
+            <div class="col-lg-10">
                 <div class="row" id="cars-container">
                     <!-- Car card -->
                     <script src="{{ url_for('static', filename='js/load-cars.js') }}"></script>
+                    <script src="{{ url_for('static', filename='js/like-car.js') }}"></script>
                 </div>
             </div>
         </div>
     </div>
+    <nav aria-label="Car pagination" class="text-center">
+        <ul id="pagination" class="pagination justify-content-center"></ul>
+    </nav>
 </section>
-
 <!-- content close -->
 
-<a href="#" id="back-to-top"></a>
+<a href="#" id="back-to-top" class="btn btn-warning" style="position: fixed; bottom: 20px; right: 20px;">
+    <i class="fas fa-arrow-circle-up"></i> Back to top
+</a>
+
+<script>
+    document.getElementById('back-to-top').addEventListener('click', function (event) {
+        event.preventDefault();
+        window.scrollTo(0, 0);
+    });
+</script>
+
+<script src="{{ url_for('static', filename='js/filter-cars.js') }}"></script>
 
 {% endblock %}

@@ -89,7 +89,7 @@ def save_images(soup, title):
     image_tags = soup.find_all('img', {'class': 'gabtn'})
 
     # Download and save each image
-    for i, img in tqdm(enumerate(image_tags[:5]), desc="Downloading images", total=min(5, len(image_tags))):
+    for i, img in tqdm(enumerate(image_tags[:5]), desc="Downloading images", total=min(3, len(image_tags))):
         img_url = img['src']
         # stream = True 可用於處理大量數據，有效管理內存使用的方法
         response = requests.get(img_url, stream=True)
@@ -114,10 +114,13 @@ def main():
 
         cars_info = []  # 用於儲存每個車輛頁面爬取的資訊
         for car in car_list:
-            car_url = car['short_link']
-            car_info = yahoo_car_crawler(driver, car_url)
-            if car_info:
-                cars_info.append(car_info)
+            car_url = car.get('short_link')  # Using .get to safely access the 'short_link' key
+            if car_url:  # Checks if car_url is not None and not an empty string
+                car_info = yahoo_car_crawler(driver, car_url)
+                if car_info:
+                    cars_info.append(car_info)
+            else:
+                print(f"Skipping car with missing 'short_link': {car.get('name')}")
         # 將爬取的資訊存儲到 cars.json 文件中
         with open("app/script/cars.json", "w") as file:
             json.dump(cars_info, file)

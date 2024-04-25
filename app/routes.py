@@ -1,51 +1,216 @@
-from app import app, db
+from app import app, db, login
 from flask import render_template, request, jsonify, flash, redirect, url_for
 from app.models import User, Car
 from app.utilities.helpers import clean_input
+from app.utilities.auth import admin_required, user_only
+from flask_login import login_user, logout_user, current_user, login_required
+from enum import Enum, unique
+
+@unique
+class UserRole(Enum):
+    USER = "user"
+    ADMIN = "admin"
+
+@login.user_loader
+def user_loader(id):
+    return db.session.get(User, int(id))
+
 
 # 前端渲染
 
-
 @app.route("/")
+@user_only
 def home():
-    return render_template("index.html")
+    return render_template("index.html", user=current_user)
+
+# 汽車頁面
 
 
 @app.route("/cars")
+@user_only
 def view_cars():
-    return render_template("cars.html")
+    return render_template('cars.html', user=current_user)
+
+# 單一汽車頁面
 
 
 @app.route('/cars/<int:car_id>')
+@user_only
 def view_spec_car(car_id):
-    return render_template('car-single.html', car_id=car_id)
+    return render_template('car-single.html', car_id=car_id, user=current_user)
+
+
+# 使用者登入
+
+
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+    if current_user.is_authenticated:
+        return redirect(url_for('view_cars'))
+    if request.method == 'POST':
+        email = request.form.get('email')
+        password = request.form.get('password')
+        if not email or not password:
+            flash('email and password are required!')
+            return redirect(url_for('login'))
+
+        user = User.query.filter_by(email=email).first()
+        if user and user.check_password(password):
+            # 驗證完成之後，透過login_user來記錄user_id
+            login_user(user)
+            if current_user.role.value == UserRole.ADMIN.value:
+                # Redirect admins to the admin dashboard
+                return redirect(url_for('admin_cars'))
+            else:
+            # Redirect regular users to the user dashboard
+                # print(current_user.role)
+                # print(UserRole.USER.value)
+                return redirect(url_for('view_cars'))
+        else:
+            flash('Invalid username or password')
+            return redirect(url_for('login'))
+
+    return render_template('login.html')
+
+# 使用者登出
+
+
+@app.route('/logout')
+def logout():
+    logout_user()
+    return redirect(url_for('login'))
+
+# 使用者註冊
+@app.route('/signup', methods=['GET', 'POST'])
+def signup():
+    if request.method == 'POST':
+        username = request.form.get('username')
+        email = request.form.get('email')
+        password = request.form.get('password')
+        if not username or not email or not password:
+            flash('Username, email, and password are required!')
+            return redirect(url_for('signup'))
+
+        if User.query.filter_by(username=username).first():
+            flash('Username already taken')
+            return redirect(url_for('signup'))
+
+        if User.query.filter_by(email=email).first():
+            flash('Email already in use')
+            return redirect(url_for('signup'))
+
+        new_user = User(username=username, email=email)
+        new_user.set_password(password)
+
+        db.session.add(new_user)
+        db.session.commit()
+
+        flash('Registration successful')
+        return redirect(url_for('login'))
+    return render_template('register.html')
+
+# 個人資訊
+
+
+@app.route("/profile", methods=['GET', 'POST'])
+@login_required
+@user_only
+def profile():
+    if request.method == 'POST':
+        username = request.form.get('username')
+        email = request.form.get('email')
+        if not username or not email:
+            return jsonify({'error': 'Username and email are required!'}), 400
+
+        # Update current_user instance
+        current_user.username = username
+        current_user.email = email
+        db.session.commit()
+
+        # return jsonify({'message': 'Profile updated successfully'}), 200
+        return render_template('profile.html', template='_profile.html', user=current_user)
+     # For GET request
+    return render_template('profile.html', template='_profile.html', user=current_user)
+
+
+@app.route("/profile/orders")
+@login_required
+@user_only
+def orders():
+    return render_template('profile.html', template='_orders.html',user=current_user)
+
+
+@app.route("/profile/favorites")
+@login_required
+@user_only
+def favorites():
+    return render_template('profile.html', template='_favorites.html',user=current_user)
 
 
 # ==== api ====
 
-# 瀏覽所有汽車
-@app.route("/api/cars")
-def cars():
-    brand = request.args.get("brand")
-    if brand:
-        # 從資料庫撈出指定的廠牌
-        cars = Car.query.filter_by(brand=brand).all()
-    else:
-        # 如果沒有指定廠牌，就撈出所有資料
-        cars = Car.query.all()
+# 個人資訊
+@app.route('/api/user_profile')
+@login_required
+def user_profile_api():
+    # Assuming user data is stored in a dictionary format in `current_user`
+    return jsonify({
+        'username': current_user.username,
+        'email': current_user.email
+    })
 
-    # 以字典返回資料
+
+# 所有汽車
+@app.route("/api/cars")
+# `/api/cars?page=${page}`
+def cars():
+    page = request.args.get('page', 1, type=int)
+    per_page = request.args.get('per_page', 12, type=int)
+    brand = request.args.get('brand')
+    doors = request.args.get('doors')
+    seats = request.args.get('seats')
+    power_type = request.args.get('power_type')
+    displacement = request.args.get('displacement')
+
+    query = Car.query
+    if brand:
+        query = query.filter(Car.brand == brand)
+    if doors:
+        query = query.filter(Car.door == doors)
+    if seats:
+        query = query.filter(Car.seat == seats)
+    if power_type:
+        query = query.filter(Car.power_type == power_type)
+    if displacement:
+        query = query.filter(Car.displacement == displacement)
+
+    pagination = query.paginate(page=page, per_page=per_page, error_out=False)
+    cars = pagination.items  # Access the paginated items
+
+    # cars = Car.query.all()
+
     cars_list = [
         {"id": car.id,
-        "name": car.name,
+         "name": car.name,
          "brand": car.brand,
          "year": car.year,
-         "model": car.model}
-        for car in cars
+         "model": car.model,
+         "isLiked": car in current_user.liked_cars if current_user.is_authenticated else None
+         } for car in cars
     ]
+    response = {
+        "cars": cars_list,
+        "isAuthenticated": current_user.is_authenticated,
+        "total_pages": pagination.pages,
+        "current_page": pagination.page,
+        "has_next": pagination.has_next,
+        "has_prev": pagination.has_prev,
+        "next_num": pagination.next_num,
+        "prev_num": pagination.prev_num
+    }
 
     # 以 JSON 格式回傳
-    return jsonify(cars_list)
+    return jsonify(response)
 
 
 @app.route("/api/cars/pop")
@@ -85,21 +250,117 @@ def car_spec_api(car_id):
     return jsonify(car_data)
 
 
-# ==== admin ====
+# 過濾條件
+@app.route('/api/brand')
+def get_brands():
+    brands = Car.query.with_entities(Car.brand).distinct().all()
+    return jsonify([brand[0] for brand in brands])
+
+
+@app.route('/api/seat')
+def get_seat():
+    seats = Car.query.with_entities(Car.seat).distinct().all()
+    return jsonify([seat[0] for seat in seats])
+
+
+@app.route('/api/door')
+def get_door():
+    doors = Car.query.with_entities(Car.door).distinct().all()
+    return jsonify([door[0] for door in doors])
+
+# 喜歡汽車
+
+
+@app.route('/api/like_car/<int:car_id>', methods=['POST'])
+@login_required
+def like_car(car_id):
+    user_id = current_user.id
+    user = User.query.get(user_id)
+    print(user.liked_cars)
+    car = Car.query.get(car_id)
+    print(car)
+
+    if not user or not car:
+        return jsonify({"error": "User or Car not found"}), 404
+
+    if car in user.liked_cars:
+        return jsonify({"message": "Car already liked by user"}), 400
+
+    user.liked_cars.append(car)
+    db.session.commit()
+    return jsonify({"message": "Car liked successfully"}), 200
+
+# 不喜歡汽車
+
+
+@app.route('/api/unlike_car/<int:car_id>', methods=['POST'])
+@login_required
+def unlike_car(car_id):
+    user_id = current_user.id
+    print(user_id)
+    user = User.query.get(user_id)
+    car = Car.query.get(car_id)
+
+    if not user or not car:
+        return jsonify({"error": "User or Car not found"}), 404
+
+    if car not in user.liked_cars:
+        return jsonify({"message": "Car not liked by user"}), 400
+
+    user.liked_cars.remove(car)
+    db.session.commit()
+    return jsonify({"message": "Car unliked successfully"}), 200
+
+
+
+# 使用者喜歡的汽車
+@app.route('/api/favorites', methods=['GET'])
+@login_required
+def user_favorites():
+    user_id = current_user.id
+    user = User.query.get(user_id)
+    if not user:
+        return jsonify({'error': 'User not found'}), 404
+    liked_cars = user.liked_cars
+    print(liked_cars)
+    cars_list = [
+        {'id': car.id, 'name': car.name}
+        for car in liked_cars
+    ]
+    return jsonify(cars_list)
+
+
+# ============================
+# ========== admin ===========
+# ============================
+
 # 瀏覽汽車
-@app.route('/admin', methods=['GET'])
-def home_car():
-    return redirect(url_for('admin_cars'))
+# @app.route('/admin', methods=['GET'])
+# @login_required
+# def home_car():
+#     # if current_user.role.value == UserRole.ADMIN.value:
+#     #     return redirect(url_for('admin_cars'))
+#     # # Redirect non-admins to the user cars page
+#     # return redirect(url_for('view_cars'))
+#     return redirect(url_for('admin_cars'))
 
-
+@app.route('/admin')
 @app.route('/admin/cars')
+@login_required
+@admin_required
 def admin_cars():
     cars = Car.query.all()
+    # if current_user.role.value == UserRole.ADMIN.value:
+    #     return render_template('admin/cars.html', cars=cars)
+    # return redirect(url_for('view_cars'))
     return render_template('admin/cars.html', cars=cars)
 
+    
 
 # 編輯汽車
 @app.route('/admin/cars/<int:id>', methods=['GET', 'POST'])
+@login_required
+@admin_required
 def edit_car(id):
     car = Car.query.get_or_404(id)
     if request.method == "POST":
@@ -137,6 +398,8 @@ def edit_car(id):
 
 
 @app.route('/admin/cars/new', methods=['GET', 'POST'])
+@login_required
+@admin_required
 def new_car():
     if request.method == 'POST':
         # Extract information from form
@@ -181,6 +444,8 @@ def new_car():
 
 # Change to POST if using forms
 @app.route('/admin/cars/<int:id>/delete', methods=['POST'])
+@login_required
+@admin_required
 def delete_car(id):
     car = Car.query.get_or_404(id)
 
@@ -199,8 +464,11 @@ def delete_car(id):
 
 
 @app.route('/admin/users')
+@login_required
+@admin_required
 def admin_users():
-    return render_template('admin/users.html')
+    users = User.query.all()
+    return render_template('admin/users.html',users=users)
 
 
 # test database
