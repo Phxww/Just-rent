@@ -479,3 +479,10 @@ def test_db():
         return f"資料庫連線成功，用戶數量為：{user_count}"
     except Exception as e:
         return f"資料庫連線失敗，錯問訊息：{e}"
+
+
+
+# Tappay
+@app.route("/get-prime")
+def get_prime():
+    return render_template('tappay.html')
