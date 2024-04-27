@@ -1,15 +1,18 @@
 from app import app, db, login
 from flask import render_template, request, jsonify, flash, redirect, url_for
-from app.models import User, Car
+from app.models import User, Car, Reservation
 from app.utilities.helpers import clean_input
 from app.utilities.auth import admin_required, user_only
 from flask_login import login_user, logout_user, current_user, login_required
 from enum import Enum, unique
+from sqlalchemy import and_, or_
+
 
 @unique
 class UserRole(Enum):
     USER = "user"
     ADMIN = "admin"
+
 
 @login.user_loader
 def user_loader(id):
@@ -62,7 +65,7 @@ def login():
                 # Redirect admins to the admin dashboard
                 return redirect(url_for('admin_cars'))
             else:
-            # Redirect regular users to the user dashboard
+                # Redirect regular users to the user dashboard
                 # print(current_user.role)
                 # print(UserRole.USER.value)
                 return redirect(url_for('view_cars'))
@@ -81,6 +84,8 @@ def logout():
     return redirect(url_for('login'))
 
 # 使用者註冊
+
+
 @app.route('/signup', methods=['GET', 'POST'])
 def signup():
     if request.method == 'POST':
@@ -137,14 +142,14 @@ def profile():
 @login_required
 @user_only
 def orders():
-    return render_template('profile.html', template='_orders.html',user=current_user)
+    return render_template('profile.html', template='_orders.html', user=current_user)
 
 
 @app.route("/profile/favorites")
 @login_required
 @user_only
 def favorites():
-    return render_template('profile.html', template='_favorites.html',user=current_user)
+    return render_template('profile.html', template='_favorites.html', user=current_user)
 
 
 # ==== api ====
@@ -244,7 +249,8 @@ def car_spec_api(car_id):
         'model': car.model,
         'seat': car.seat,
         'door': car.door,
-        'body': car.body
+        'body': car.body,
+        'price': car.price
     }
 
     return jsonify(car_data)
@@ -312,7 +318,6 @@ def unlike_car(car_id):
     return jsonify({"message": "Car unliked successfully"}), 200
 
 
-
 # 使用者喜歡的汽車
 @app.route('/api/favorites', methods=['GET'])
 @login_required
@@ -355,7 +360,6 @@ def admin_cars():
     # return redirect(url_for('view_cars'))
     return render_template('admin/cars.html', cars=cars)
 
-    
 
 # 編輯汽車
 @app.route('/admin/cars/<int:id>', methods=['GET', 'POST'])
@@ -468,7 +472,7 @@ def delete_car(id):
 @admin_required
 def admin_users():
     users = User.query.all()
-    return render_template('admin/users.html',users=users)
+    return render_template('admin/users.html', users=users)
 
 
 # test database
@@ -481,8 +485,68 @@ def test_db():
         return f"資料庫連線失敗，錯問訊息：{e}"
 
 
+# ============================
+# ========== 租賃付款 =========
+# ============================
+
 
 # Tappay
-@app.route("/get-prime")
-def get_prime():
-    return render_template('tappay.html')
+@app.route("/payment")
+@login_required
+def payment():
+    user_id = current_user.id
+    print(user_id)
+    user = User.query.get(user_id)
+    return render_template('payment.html', user=user)
+
+
+@app.route('/api/check-availability',  methods=['POST'])
+def check_availability():
+    # Access the JSON data sent with the POST request
+    data = request.get_json()
+    if not data:
+        return jsonify({'error': 'No data received'}), 400
+
+    # Extract dates from the JSON data
+    pick_up_date = data['pickUpDate']
+    return_date = data['returnDate']
+    car_id = data['carId']
+
+    if pick_up_date > return_date:
+        return jsonify({'error': 'Pick-up date must not be later than the return date.'}), 400
+
+    result = Reservation.query.filter(
+        Reservation.car_id == car_id,
+        # or_(...)用來包含多個條件
+        or_(
+            # 假設我的 Pick Up Date: 2023-04-15 , Return Date: 2023-04-20
+            # start_date <= '2023-04-15' AND end_date >= '2023-04-15'
+            # 檢查任何已存在的預訂是否覆蓋了取車日期
+            and_(Reservation.start_date <= pick_up_date,
+                 Reservation.end_date >= pick_up_date),
+            # 檢查任何已存在的預訂是否覆蓋還車日期
+            and_(Reservation.start_date <= return_date,
+                 Reservation.end_date >= return_date),
+            # 檢查是否有預訂的完整時段位於請求的日期範圍內
+            and_(Reservation.start_date >= pick_up_date,
+                 Reservation.end_date <= return_date)
+        )
+    ).first()
+
+    if result:
+        return jsonify({'available': False}), 200
+
+    # Car is available, create a new reservation
+    new_reservation = Reservation(
+        car_id=car_id,
+        user_id=current_user.id, 
+        start_date=pick_up_date,
+        end_date=return_date,
+        status='Pending'  # Initial reservation status
+    )
+    db.session.add(new_reservation)
+    db.session.commit()
+
+    return jsonify({'available': True, 'reservationId': new_reservation.id}), 200
+
+

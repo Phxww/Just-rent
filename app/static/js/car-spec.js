@@ -5,7 +5,7 @@ fetch(`/api/cars/${carId}`)
     const carsSpec = document.getElementById("car-spec");
     const carHtml = `
             <h3>${car.name}</h3>
-            <p>other details...</p>
+            <h2> Price: ${car.price} / day</h2>
             <h4>Specifications</h4>
             <ul class="list-unstyled">
                 <li><strong>Body:</strong> ${car.body}</li>
