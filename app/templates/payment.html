@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payment Form</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.13/semantic.min.css">
+    <style>
+        body {
+            font-family: Lato, 'Helvetica Neue', Arial, Helvetica, sans-serif;
+            padding: 20px;
+            background: #f4f4f4;
+        }
+
+        .form-container {
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            max-width: 400px;
+            margin: 0 auto;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+
+        input[type="text"],
+        input[type="email"],
+        #tappay-iframe {
+            font-family: Lato, 'Helvetica Neue', Arial, Helvetica, sans-serif;
+            margin: 0;
+            outline: 0;
+            line-height: 1.21428571em;
+            padding: .578571em 1em;
+            font-size: 1em;
+            background: #fff;
+            border: 1px solid rgba(34, 36, 38, .15);
+            color: rgba(0, 0, 0, .87);
+            border-radius: .28571429rem;
+            box-shadow: 0 0 0 0 transparent inset;
+            -webkit-transition: color .1s ease, border-color .1s ease;
+            transition: color .1s ease, border-color .1s ease;
+            width: 100%;
+        }
+
+        button {
+            width: 100%;
+            margin-top: 30px;
+            padding: 10px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container mt-5">
+        <h2 class="mb-3">Payment Page for Reservation ID: {{ reservation.id }}</h2>
+        <div class="form-container">
+            <form id="payment-form" class="form-group">
+                <input type="hidden" id="reservation-id">
+                <div class="mb-3">
+                    <label for="reservation-details" class="form-label">Reservation Details:</label>
+                    <hr>
+                    <p><strong>Reservation ID:</strong> {{ reservation.id }}</p>
+                    <p><strong>User Name:</strong> {{ reservation.user.username }}</p>
+                    <p><strong>Car:</strong> {{ reservation.car.name }}</p>
+                    <p><strong>Pick-Up Date:</strong> {{ reservation.start_date }}</p>
+                    <p><strong>Return Date:</strong> {{ reservation.end_date }}</p>
+                    <p><strong>Pick-Up Location:</strong> {{ reservation.pick_up_location.name }}</p>
+                    <p><strong>Drop-Off Location:</strong> {{ reservation.drop_off_location.name }}</p>
+                    <p><strong>Rental Days:</strong> {{ rental_days }}</p>
+                    <p><strong>Total Amount:</strong> ${{ total_amount }}</p>
+                    <!-- Payment status logic -->
+                    <p><strong>付款狀態:</strong>
+                        {% if reservation.status == 'Pending' %}
+                        尚未付款
+                        {% elif reservation.status == 'Success' %}
+                        已付款
+                        {% elif reservation.status == 'Cancel' %}
+                        已取消訂單
+                        {% else %}
+                        狀態未知
+                        {% endif %}
+                    </p>
+                    <hr>
+                </div>
+                {% if reservation.status == 'Pending' %}
+                <div class="mb-3">
+                    <label>Enter Credit Card</label>
+                    <div id="tappay-iframe">
+                        <!-- TapPay's card number, expiration date, and CVV will be injected here -->
+                    </div>
+                </div>
+                <button id="submit" type="submit">Pay Now</button>
+                {% endif %}
+            </form>
+        </div>
+    </div>
+
+    <!-- Load TapPay SDK -->
+    <script src="https://js.tappaysdk.com/sdk/tpdirect/v5.14.0"></script>
+    <script src="{{ url_for('static', filename='js/payment.js') }}"></script>
+
+</body>
+
+</html>

@@ -495,10 +495,26 @@ def test_db():
 @login_required
 def payment():
     user_id = current_user.id
-    print(user_id)
-    user = User.query.get(user_id)
-    return render_template('payment.html', user=user)
+    # Get reservation ID or None if not provided
+    reservation_id = request.args.get('reservationId', None)
 
+    if not reservation_id:
+        flash("No reservation specified.", "error")
+        # Assuming 'index' is a safe redirect target
+        return redirect(url_for('index'))
+
+    user = User.query.get(user_id)
+    if not user:
+        flash("User not found.", "error")
+        return redirect(url_for('index'))
+    
+    reservation = Reservation.query.filter_by(id=reservation_id).first()
+
+    # Calculate rental days and total amount
+    rental_days = (reservation.end_date - reservation.start_date).days
+    total_amount = rental_days * reservation.car.price  # Assuming the rate is 3 per day
+
+    return render_template('payment.html', user=user,reservation=reservation, rental_days=rental_days, total_amount=total_amount)
 
 @app.route('/api/check-availability',  methods=['POST'])
 def check_availability():
@@ -508,6 +524,7 @@ def check_availability():
         return jsonify({'error': 'No data received'}), 400
 
     # Extract dates from the JSON data
+    print(data)
     pick_up_date = data['pickUpDate']
     return_date = data['returnDate']
     car_id = data['carId']
@@ -549,4 +566,23 @@ def check_availability():
 
     return jsonify({'available': True, 'reservationId': new_reservation.id}), 200
 
-
+# get reservation
+@app.route('/api/get-reservation/<int:reservation_id>', methods=['GET'])
+@login_required
+def get_reservation(reservation_id):
+    reservation = Reservation.query.filter_by(
+        id=reservation_id, status='Pending').first()
+    if reservation:
+        return jsonify({
+            'success': True,
+            'data': {
+                'reservationId': reservation.id,
+                'carId': reservation.car_id,
+                'userId': reservation.user_id,
+                'start_date': reservation.start_date.strftime('%Y-%m-%d'),
+                'end_date': reservation.end_date.strftime('%Y-%m-%d'),
+                'status': reservation.status
+            }
+        }), 200
+    else:
+        return jsonify({'success': False, 'message': 'No pending reservation found for the given ID'}), 404

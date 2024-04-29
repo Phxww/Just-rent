@@ -1,49 +1,54 @@
-// TPDirect.setupSDK(appID, appKey, serverType)
-const APP_ID = "148927";
-const APP_KEY =
-  "app_pqn8isDobHevEDlBS9023r4syqCC539nPabKGYIFHOfrKMXqDRBRpYggogeu";
+TPDirect.setupSDK(
+  148927,
+  "app_pqn8isDobHevEDlBS9023r4syqCC539nPabKGYIFHOfrKMXqDRBRpYggogeu",
+  "sandbox"
+);
 
-//  金鑰初始化
-TPDirect.setupSDK(APP_ID, APP_KEY, "sandbox");
+TPDirect.card.setup("#tappay-iframe");
+TPDirect.card.onUpdate(function (update) {
+  if (update.canGetPrime) {
+    document.getElementById("submit").disabled = false;
+  } else {
+    document.getElementById("submit").disabled = true;
+  }
+});
 
-// 觸發送出表單
-function onSubmit() {
-  TPDirect.card.setup({
-    fields: {
-      number: {
-        // The CSS selector of your card number input field
-        element: "#card-number",
-        placeholder: "**** **** **** ****",
-      },
-      expirationDate: {
-        // The CSS selector of your card expiration date input field
-        element: "#card-expiration-date",
-        placeholder: "MM / YY",
-      },
-      ccv: {
-        // The CSS selector of your card ccv input field
-        element: "#card-ccv",
-        placeholder: "ccv",
-      },
-    },
-    styles: {
-      // Add styles to your input fields if necessary
-      input: {
-        color: "gray",
-      },
-      ":focus": {
-        color: "black",
-      },
-    },
+document
+  .getElementById("payment-form")
+  .addEventListener("submit", function (event) {
+    event.preventDefault();
+    TPDirect.card.getPrime(function (result) {
+      if (result.status === 0) {
+        console.log("prime", result.card.prime);
+        const reservationId = document.getElementById("reservation-id").value;
+        fetch(`/api/get-reservation/${reservationId}`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "X-CSRFToken": csrfToken,
+          },
+          body: JSON.stringify({
+            prime: result.card.prime,
+            // Include other payment details if necessary
+          }),
+        })
+          .then((response) => response.json())
+          .then((data) => {
+            if (data.success) {
+              alert("Payment successful!");
+              console.log("Payment processed successfully");
+            } else {
+              alert("Payment failed: " + data.message);
+              console.error("Payment processing failed:", data.error);
+            }
+          })
+          .catch((error) => {
+            console.error("Error sending prime to server:", error);
+            alert("Error processing payment. Please try again.");
+          });
+      } else {
+        console.error("Failed to get prime:", result.msg);
+      }
+    });
   });
 
-  // Get prime
-  TPDirect.card.getPrime((result) => {
-    if (result.status !== 0) {
-      alert("Get prime error: " + result.msg);
-      return;
-    }
-    alert("Get prime success, prime: " + result.card.prime);
-    console.log("Prime token: ", result.card.prime);
-  });
-}

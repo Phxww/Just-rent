@@ -24,10 +24,11 @@ document
       dropOffLocation,
       pickUpDate,
       returnDate,
-      function (available) {
+      carId,
+      function (available, reservationId) {
         if (available) {
           // If available, proceed to payment
-          initiatePaymentProcess();
+          initiatePaymentProcess(reservationId);
         } else {
           // Show message if not available
           alert(
@@ -38,7 +39,7 @@ document
     );
   });
 
-function checkAvailability(pickUpLocation, dropOffLocation, pickUpDate, returnDate, callback) {
+function checkAvailability(pickUpLocation, dropOffLocation, pickUpDate, returnDate, carId, callback) {
   const data = {
     pickUpLocation: pickUpLocation,
     dropOffLocation: dropOffLocation,
@@ -61,14 +62,20 @@ function checkAvailability(pickUpLocation, dropOffLocation, pickUpDate, returnDa
       }
       return response.json();
     })
-    .then((data) => callback(data.available))
+    .then((data) => {
+      if (data.available) {
+        callback(data.available, data.reservationId);
+      } else {
+        callback(data.available);
+      }
+    })
     .catch((error) => {
       console.error("Error checking availability:", error);
       alert("Failed to check availability. Please try again.");
     });
 }
 
-function initiatePaymentProcess() {
-  // Implement TapPay or another payment process integration here
-  window.location.href = "/payment";
+function initiatePaymentProcess(reservationId) {
+  // Append the reservation ID as a query parameter to the payment URL
+  window.location.href = `/payment?reservationId=${reservationId}`;
 }
