@@ -4,6 +4,10 @@ TPDirect.setupSDK(
   "sandbox"
 );
 
+const csrfToken = document
+  .querySelector('meta[name="csrf-token"]')
+  .getAttribute("content");
+
 TPDirect.card.setup("#tappay-iframe");
 TPDirect.card.onUpdate(function (update) {
   if (update.canGetPrime) {
@@ -20,8 +24,12 @@ document
     TPDirect.card.getPrime(function (result) {
       if (result.status === 0) {
         console.log("prime", result.card.prime);
-        const reservationId = document.getElementById("reservation-id").value;
-        fetch(`/api/get-reservation/${reservationId}`, {
+        const reservationId = document.getElementById("rsv_id").textContent;
+        const reservationName = document.getElementById("rsv_name").textContent;
+        const reservationEmail = document.getElementById("rsv_email").textContent;
+        const reservationAmount = document.getElementById("rsv_amount").textContent;
+        const url = "/api/tappaysdk/pay-by-prime";
+        fetch(url, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -29,17 +37,29 @@ document
           },
           body: JSON.stringify({
             prime: result.card.prime,
-            // Include other payment details if necessary
+            partner_key:
+              "partner_KOO8dhjMg4V7bifJUKXcuDXiYW0lK78oFvICgoeREFyh6Hp31fuu306X",
+            merchant_id: "tppf_annachu0988_GP_POS_1",
+            details: "TapPay Test",
+            amount: 1, 
+            cardholder: {
+              phone_number: "+886923456789",
+              name: reservationName,
+              email: reservationEmail,
+              // zip_code: "100",
+              // address: "台北市天龍區芝麻街1號1樓",
+            },
           }),
         })
           .then((response) => response.json())
           .then((data) => {
-            if (data.success) {
+            if (data.status === 0) {
+              console.log(data);
               alert("Payment successful!");
               console.log("Payment processed successfully");
             } else {
-              alert("Payment failed: " + data.message);
-              console.error("Payment processing failed:", data.error);
+              alert("Payment failed: " + data.msg);
+              console.error("Payment processing failed:", data.status);
             }
           })
           .catch((error) => {
@@ -51,4 +71,3 @@ document
       }
     });
   });
-
