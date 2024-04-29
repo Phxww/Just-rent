@@ -67,6 +67,7 @@ class Reservation(db.Model):
     pick_up_location_id = db.Column(db.Integer, db.ForeignKey('locations.id'))
     drop_off_location_id = db.Column(db.Integer, db.ForeignKey('locations.id'))
     status = db.Column(db.String(255), nullable=False, default='Pending')
+    auth_code = db.Column(db.Integer, nullable=True)
 
     # Relationships linking back to the Car, User, and Location
     # 使用 back_populates 來確保兩邊資料的修改能同步更新

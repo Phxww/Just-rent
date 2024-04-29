@@ -555,12 +555,12 @@ def payment():
     if not reservation_id:
         flash("No reservation specified.", "error")
         # Assuming 'index' is a safe redirect target
-        return redirect(url_for('index'))
+        return redirect(url_for('cars'))
 
     user = User.query.get(user_id)
     if not user:
         flash("User not found.", "error")
-        return redirect(url_for('index'))
+        return redirect(url_for('cars'))
 
     reservation = Reservation.query.filter_by(id=reservation_id).first()
 
@@ -574,26 +574,8 @@ def payment():
 # Tappay-paybyprime
 
 
-# @app.route('/api/tappaysdk/pay-by-prime/<int:reservation_id>', methods=['POST'])
 @app.route('/api/tappaysdk/pay-by-prime', methods=['POST'])
 @login_required
-# def get_reservation(reservation_id):
-#     reservation = Reservation.query.filter_by(
-#         id=reservation_id, status='Pending').first()
-#     if reservation:
-#         return jsonify({
-#             'success': True,
-#             'data': {
-#                 'reservationId': reservation.id,
-#                 'carId': reservation.car_id,
-#                 'userId': reservation.user_id,
-#                 'start_date': reservation.start_date.strftime('%Y-%m-%d'),
-#                 'end_date': reservation.end_date.strftime('%Y-%m-%d'),
-#                 'status': reservation.status
-#             }
-#         }), 200
-#     else:
-#         return jsonify({'success': False, 'message': 'No pending reservation found for the given ID'}), 404
 def proxy_payment():
     tappay_url = 'https://sandbox.tappaysdk.com/tpc/payment/pay-by-prime'
     # Extract the JSON body from the incoming Flask request
@@ -607,3 +589,31 @@ def proxy_payment():
     response = requests.post(tappay_url, headers=headers, json=incoming_data)
     return jsonify(response.json()), response.status_code
 
+# Update Reservation Status
+
+
+@app.route('/api/update-payment-status', methods=['POST'])
+@login_required
+def update_reservation_status():
+    data = request.get_json()
+    reservation_id = data.get('reservationId')
+    new_status = data.get('status')
+    auth_code = data.get('auth_code')
+
+    if not reservation_id or new_status != 'Success':
+        return jsonify({'error': 'Invalid request'}), 400
+
+    try:
+        # Begin a transaction
+        reservation = Reservation.query.filter_by(id=reservation_id).first()
+        if reservation:
+            reservation.status = new_status
+            reservation.auth_code = auth_code
+            db.session.add(reservation)  # Not needed unless you're adding a new record
+            db.session.commit()  # Commit the transaction
+            return jsonify({'message': 'Reservation status updated successfully'}), 200
+        else:
+            return jsonify({'error': 'Reservation not found'}), 404
+    except Exception as e:
+        db.session.rollback()  # Roll back the transaction on error
+        return jsonify({'error': str(e)}), 500

@@ -77,13 +77,13 @@
                     <p><strong>Reservation ID:</strong> <span id="rsv_id">{{ reservation.id }}</span></p>
                     <p ><strong>User Name:</strong> <span id="rsv_name">{{ reservation.user.username }}</span></p>
                     <p ><strong>User Email:</strong><span id="rsv_email"> {{ reservation.user.email }}</span></p>
-                    <p><strong>Car:</strong> {{ reservation.car.name }}</p>
+                    <p><strong>Car:</strong> <span id="rsv_car">{{ reservation.car.name }}</span></p>
                     <p><strong>Pick-Up Date:</strong> {{ reservation.start_date }}</p>
                     <p><strong>Return Date:</strong> {{ reservation.end_date }}</p>
                     <p><strong>Pick-Up Location:</strong> {{ reservation.pick_up_location.name }}</p>
                     <p><strong>Drop-Off Location:</strong> {{ reservation.drop_off_location.name }}</p>
                     <p><strong>Rental Days:</strong> {{ rental_days }}</p>
-                    <p ><strong>Total Amount:</strong><span id="rsv_amount"> ${{ total_amount }}</span></p>
+                    <p ><strong>Total Amount: $NT</strong><span id="rsv_amount"> {{ total_amount }}</span></p>
                     <!-- Payment status logic -->
                     <p><strong>付款狀態:</strong>
                         {% if reservation.status == 'Pending' %}

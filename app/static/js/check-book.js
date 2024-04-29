@@ -1,12 +1,11 @@
+const csrfToken = document
+  .querySelector('meta[name="csrf-token"]')
+  .getAttribute("content");
 
 document
   .getElementById("bookingForm")
   .addEventListener("submit", function (event) {
     event.preventDefault(); // Prevent the form from submitting normally
-    const csrfToken = document
-      .querySelector('meta[name="csrf-token"]')
-      .getAttribute("content");
-
 
     // Retrieve form data
     var pickUpLocation = document.getElementById("pickupLocation").value;
@@ -40,7 +39,14 @@ document
     );
   });
 
-function checkAvailability(pickUpLocation, dropOffLocation, pickUpDate, returnDate, carId, callback) {
+function checkAvailability(
+  pickUpLocation,
+  dropOffLocation,
+  pickUpDate,
+  returnDate,
+  carId,
+  callback
+) {
   const data = {
     pickUpLocation: pickUpLocation,
     dropOffLocation: dropOffLocation,
