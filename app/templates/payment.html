@@ -63,6 +63,25 @@
             background-color: #0056b3;
         }
     </style>
+        <script>
+            document.addEventListener('DOMContentLoaded', function () {
+                var expirationTime = new Date().getTime() + 1 * 60000;
+                var timer = setInterval(function () {
+                    var now = new Date().getTime();
+                    var distance = expirationTime - now;
+                    if (distance < 0) {
+                        clearInterval(timer);
+                        document.getElementById("timer").innerHTML = "EXPIRED";
+                        alert("Reservation has expired. Please make a new reservation.");
+                        // Optionally redirect the user or disable payment form
+                    } else {
+                        var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+                        var seconds = Math.floor((distance % (1000 * 60)) / 1000);
+                        document.getElementById("timer").innerHTML = minutes + "m " + seconds + "s ";
+                    }
+                }, 1000); // 一秒後開始執行函式 (callback)
+            });
+        </script>
 </head>
 
 <body>
@@ -96,6 +115,7 @@
                         狀態未知
                         {% endif %}
                     </p>
+                    <p>Reservation will expire in <span id="timer">30m 0s</span></p>
                     <hr>
                 </div>
                 {% if reservation.status == 'Pending' %}
@@ -107,6 +127,7 @@
                 </div>
                 <button id="submit" type="submit">Pay Now</button>
                 {% endif %}
+                <button type="button" class="btn btn-secondary" onclick="history.back()"> Cancel</button>
             </form>
         </div>
     </div>

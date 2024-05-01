@@ -1,6 +1,6 @@
 from app import app, db, login
 from flask import render_template, request, jsonify, flash, redirect, url_for
-from app.models import User, Car, Reservation
+from app.models import User, Car, Reservation, Location
 from app.utilities.helpers import clean_input
 from app.utilities.auth import admin_required, user_only
 from flask_login import login_user, logout_user, current_user, login_required
@@ -336,6 +336,30 @@ def user_favorites():
     return jsonify(cars_list)
 
 
+# 使用者的訂單
+
+@app.route('/api/reservations', methods=['GET'])
+@login_required
+def user_reservations():
+    user_id = current_user.id
+    reservations = Reservation.query.filter_by(user_id=user_id).order_by(Reservation.start_date.asc()).all()
+    bookingList = []
+    try:
+        for reservation in reservations:
+            bookingList.append({
+                "id": reservation.id,
+                "car_name": reservation.car.name,
+                "pick_up_date": reservation.start_date.isoformat(),
+                "return_date": reservation.end_date.isoformat(),
+                "pick_up_location": reservation.pick_up_location.name if reservation.pick_up_location_id is not None else None,
+                "drop_off_location": reservation.drop_off_location.name if reservation.pick_up_location_id is not None else None,
+                "status": reservation.status,
+                "created_at": reservation.created_at.isoformat() if reservation.created_at else None
+            })
+        return jsonify(bookingList)
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
 # ============================
 # ========== admin ===========
 # ============================
@@ -349,6 +373,7 @@ def user_favorites():
 #     # # Redirect non-admins to the user cars page
 #     # return redirect(url_for('view_cars'))
 #     return redirect(url_for('admin_cars'))
+
 
 @app.route('/admin')
 @app.route('/admin/cars')
@@ -491,6 +516,7 @@ def test_db():
 # ============================
 
 
+# Check-car-availability
 
 @app.route('/api/check-availability',  methods=['POST'])
 def check_availability():
@@ -501,6 +527,8 @@ def check_availability():
 
     # Extract dates from the JSON data
     print(data)
+    pick_up_loc = data['pickUpLocation']
+    return_loc = data['dropOffLocation']
     pick_up_date = data['pickUpDate']
     return_date = data['returnDate']
     car_id = data['carId']
@@ -532,15 +560,27 @@ def check_availability():
     # Car is available, create a new reservation
     new_reservation = Reservation(
         car_id=car_id,
-        user_id=current_user.id, 
+        user_id=current_user.id,
         start_date=pick_up_date,
         end_date=return_date,
+        pick_up_location_id=pick_up_loc,
+        drop_off_location_id=return_loc,
         status='Pending'  # Initial reservation status
     )
     db.session.add(new_reservation)
     db.session.commit()
 
     return jsonify({'available': True, 'reservationId': new_reservation.id}), 200
+
+
+@app.route('/api/locations')
+def locations_api():
+    locations = Location.query.all()  # Fetch all locations
+    location_data = [
+        {'id': location.id, 'name': location.name, 'city': location.city}
+        for location in locations
+    ]
+    return jsonify(location_data)
 
 # Tappay-getyprime
 
@@ -564,10 +604,18 @@ def payment():
 
     reservation = Reservation.query.filter_by(id=reservation_id).first()
 
-    # Calculate rental days and total amount
-    rental_days = (reservation.end_date - reservation.start_date).days
-    # Assuming the rate is 3 per day
+    # Calculate rental days and total amount, add 1 to include the start day
+    # Depend on biz logic. ex, 5/1 pick and 5/2 return -> 1 day
+    rental_days = (reservation.end_date - reservation.start_date).days + 1
     total_amount = rental_days * reservation.car.price
+
+    # Apply a 9.5% discount if the rental period is more than 3 days
+    if rental_days >= 3:
+        # Calculate 9.5% of the total amount
+        discount = round(total_amount * 0.095)
+        total_amount -= discount
+
+    total_amount = round(total_amount)
 
     return render_template('payment.html', user=user, reservation=reservation, rental_days=rental_days, total_amount=total_amount)
 
@@ -609,7 +657,8 @@ def update_reservation_status():
         if reservation:
             reservation.status = new_status
             reservation.auth_code = auth_code
-            db.session.add(reservation)  # Not needed unless you're adding a new record
+            # Not needed unless you're adding a new record
+            db.session.add(reservation)
             db.session.commit()  # Commit the transaction
             return jsonify({'message': 'Reservation status updated successfully'}), 200
         else:

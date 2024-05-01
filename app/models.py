@@ -3,6 +3,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import UserMixin
 from enum import Enum, unique
 from sqlalchemy.orm import relationship
+from datetime import datetime, timezone
 
 @unique
 class UserRole(Enum):
@@ -66,6 +67,7 @@ class Reservation(db.Model):
     end_date = db.Column(db.Date, nullable=False)
     pick_up_location_id = db.Column(db.Integer, db.ForeignKey('locations.id'))
     drop_off_location_id = db.Column(db.Integer, db.ForeignKey('locations.id'))
+    created_at = db.Column(db.DateTime, default=datetime.now(timezone.utc))
     status = db.Column(db.String(255), nullable=False, default='Pending')
     auth_code = db.Column(db.Integer, nullable=True)
 
@@ -83,3 +85,7 @@ class Location(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(255), nullable=False)
     address = db.Column(db.String(255), nullable=False)
+    city = db.Column(db.String(50), nullable=False)  # 縣市
+    postal_code = db.Column(db.String(10), nullable=True)  # 郵遞區號
+    latitude = db.Column(db.Float, nullable=True)  # 緯度
+    longitude = db.Column(db.Float, nullable=True)  # 經度
