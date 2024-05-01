@@ -1,3 +1,9 @@
+document.addEventListener('DOMContentLoaded', function() {
+    var today = new Date().toISOString().split('T')[0]; // Gets today's date in YYYY-MM-DD format
+    document.getElementById('date-picker').setAttribute('min', today);
+    document.getElementById('date-return').setAttribute('min', today);
+});
+
 const csrfToken = document
   .querySelector('meta[name="csrf-token"]')
   .getAttribute("content");
