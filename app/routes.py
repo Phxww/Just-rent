@@ -175,7 +175,7 @@ def cars():
     brand = request.args.get('brand')
     doors = request.args.get('doors')
     seats = request.args.get('seats')
-    power_type = request.args.get('power_type')
+    power_type = request.args.get('powerType')
     displacement = request.args.get('displacement')
     price = request.args.get('price')
 
@@ -190,6 +190,8 @@ def cars():
         query = query.filter(Car.power_type == power_type)
     if displacement:
         query = query.filter(Car.displacement == displacement)
+    if power_type:
+        query = query.filter(Car.power_type == power_type)
 
     pagination = query.paginate(page=page, per_page=per_page, error_out=False)
     cars = pagination.items  # Access the paginated items
@@ -276,6 +278,13 @@ def get_seat():
 def get_door():
     doors = Car.query.with_entities(Car.door).distinct().all()
     return jsonify([door[0] for door in doors])
+
+
+@app.route('/api/power')
+def get_power():
+    powers = Car.query.with_entities(Car.power_type).distinct().all()
+    return jsonify([power[0] for power in powers])
+
 
 # 喜歡汽車
 
@@ -519,6 +528,7 @@ def test_db():
 # Check-car-availability
 
 @app.route('/api/check-availability',  methods=['POST'])
+@login_required
 def check_availability():
     # Access the JSON data sent with the POST request
     data = request.get_json()

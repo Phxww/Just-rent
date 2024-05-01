@@ -85,28 +85,28 @@
                         <!-- Pick Up Location -->
                         <div class="mb-3">
                             <label for="pickupLocation" class="form-label">Pick Up Location</label>
-                            <select class="form-control" name="pickup_location" id="pickupLocation">
-                                <option selected disabled value="Select Location">Select Location</option>
+                            <select class="form-control" name="pickup_location" id="pickupLocation" required>
+                                <option selected disabled value="">Select Location</option>
                             </select>
                         </div>
                         <!-- Drop Off Location -->
                         <div class="mb-3">
                             <label for="dropoffLocation" class="form-label">Drop Off Location</label>
-                            <select class="form-control" name="dropoff_location" id="dropoffLocation">
-                                <option selected disabled value="Select Location">Select Location</option>
+                            <select class="form-control" name="dropoff_location" id="dropoffLocation" required>
+                                <option selected disabled value="">Select Location</option>
                             </select>
                         </div>
 
                         <!-- Pick Up Date -->
                         <div class="mb-3">
                             <label for="date-picker" class="form-label">Pick Up Date</label>
-                            <input type="date" class="form-control" id="date-picker" name="pick_up_date">
+                            <input type="date" class="form-control" id="date-picker" name="pick_up_date" required>
                         </div>
 
                         <!-- Return Date -->
                         <div class="mb-3">
                             <label for="date-return" class="form-label">Return Date</label>
-                            <input type="date" class="form-control" id="date-return" name="return_date">
+                            <input type="date" class="form-control" id="date-return" name="return_date" required>
                         </div>
 
                         <!-- Submit Button -->

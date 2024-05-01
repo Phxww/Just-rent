@@ -42,6 +42,23 @@ function loadDoors() {
     .catch((error) => console.error("Failed to load doors:", error));
 }
 
+function loadPower() {
+  fetch("/api/power")
+    .then((response) => response.json())
+    .then((powers) => {
+      const powerFilter = document.getElementById("power-filter");
+      powers.forEach((power) => {
+        const option = document.createElement("option");
+        option.value = power;
+        option.textContent = power;
+        powerFilter.appendChild(option);
+      });
+    })
+    .catch((error) => console.error("Failed to load power type:", error));
+}
+
+
 document.addEventListener("DOMContentLoaded", loadBrands);
 document.addEventListener("DOMContentLoaded", loadSeats);
 document.addEventListener("DOMContentLoaded", loadDoors);
+document.addEventListener("DOMContentLoaded", loadPower);
