@@ -177,6 +177,7 @@ def cars():
     seats = request.args.get('seats')
     power_type = request.args.get('power_type')
     displacement = request.args.get('displacement')
+    price = request.args.get('price')
 
     query = Car.query
     if brand:
@@ -201,6 +202,7 @@ def cars():
          "brand": car.brand,
          "year": car.year,
          "model": car.model,
+         'price': car.price,
          "isLiked": car in current_user.liked_cars if current_user.is_authenticated else None
          } for car in cars
     ]
@@ -381,9 +383,6 @@ def user_reservations():
 @admin_required
 def admin_cars():
     cars = Car.query.all()
-    # if current_user.role.value == UserRole.ADMIN.value:
-    #     return render_template('admin/cars.html', cars=cars)
-    # return redirect(url_for('view_cars'))
     return render_template('admin/cars.html', cars=cars)
 
 
@@ -407,7 +406,8 @@ def edit_car(id):
             'power_type': request.form.get('power_type'),
             'brand': request.form.get('brand'),
             # Handling integer conversion
-            'door': request.form.get('door')
+            'door': request.form.get('door'),
+            'price': request.form.get('price')
         }
         all_inputs_valid = True
         for key, value in fields.items():

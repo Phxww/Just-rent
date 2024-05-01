@@ -32,7 +32,7 @@ function loadPage(page) {
                       }" data-liked="${car.isLiked}" data-car-id="${
           car.id
         }"></i>
-                  <p class="card-text">Daily rate from <strong>$265</strong></p><br>
+                  <p class="card-text">Daily rate from <strong>$ ${car.price}</strong></p><br>
               </div>
           </div>
         </div>
