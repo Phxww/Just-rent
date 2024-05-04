@@ -1,11 +1,11 @@
 {% extends "base.html" %}
 
 {% block content %}
-<section id="section-car-details" class="no-top">
+<section id="section-car-details" class="py-5">
     <div class="container">
-        <div class="row g-5">
-            <!-- Left Column for Carousel -->
-            <div class="col-lg-6">
+        <!-- Row for Carousel: Centered -->
+        <div class="row justify-content-center">
+            <div class="col-md-8">
                 <!-- Bootstrap Carousel -->
                 <div id="carouselExampleIndicators" class="carousel slide" data-bs-ride="carousel">
                     <div class="carousel-indicators">
@@ -65,10 +65,22 @@
                     </button>
                 </div>
             </div>
+        </div>
 
 
-            <!-- Middle Column for Car Details -->
-            <div class="col-lg-3" id="car-spec">
+        <!-- Middle Column for Car Details -->
+        <div class="row justify-content-center">
+            <div class="col-md-4 mt-3" id="car-spec">
+                <div class="text-center">
+                <h4>Car Specifications</h4>
+                </div>
+                <div class="table-responsive">
+                    <table class="table table-bordered">
+                        <tbody id="spec-table-body">
+                            <!-- JavaScript will populate this table -->
+                        </tbody>
+                    </table>
+                </div>
                 <script type="text/javascript">
                     var carId = {{ car_id }};
                     console.log('Car ID is:', carId);  // Check if carId is correct
@@ -77,8 +89,8 @@
             </div>
 
             <!-- Right Column for Booking Form -->
-            <div class="col-lg-3">
-                <div class="border p-4 rounded">
+            <div class="col-md-4">
+                <div class="border p-4 rounded mt-4">
                     <h4>Booking this car</h4>
                     <!-- Booking Form -->
                     <form id="bookingForm">
@@ -115,29 +127,30 @@
                 </div>
             </div>
         </div>
-        <script src="{{ url_for('static', filename='js/check-book.js') }}">
-            var carId = {{ car_id }};
-        </script>
-        <script>
-            document.addEventListener('DOMContentLoaded', function () {
-                // Fetch location data from the server
-                fetch('/api/locations')
-                    .then(response => response.json())
-                    .then(locations => {
-                        const pickupSelect = document.getElementById('pickupLocation');
-                        const dropoffSelect = document.getElementById('dropoffLocation');
+    </div>
+    <script src="{{ url_for('static', filename='js/check-book.js') }}">
+        var carId = {{ car_id }};
+    </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Fetch location data from the server
+            fetch('/api/locations')
+                .then(response => response.json())
+                .then(locations => {
+                    const pickupSelect = document.getElementById('pickupLocation');
+                    const dropoffSelect = document.getElementById('dropoffLocation');
 
-                        // Populate the pickup and dropoff location dropdowns
-                        locations.forEach(location => {
-                            // var optionElementReference = new Option(text, value, defaultSelected, selected);
-                            const option = new Option(location.name + " - " + location.city, location.id);
-                            pickupSelect.add(option.cloneNode(true));
-                            dropoffSelect.add(option);
-                        });
-                    })
-                    .catch(error => console.error('Error loading locations:', error));
-            });
-        </script>
+                    // Populate the pickup and dropoff location dropdowns
+                    locations.forEach(location => {
+                        // var optionElementReference = new Option(text, value, defaultSelected, selected);
+                        const option = new Option(location.name + " - " + location.city, location.id);
+                        pickupSelect.add(option.cloneNode(true));
+                        dropoffSelect.add(option);
+                    });
+                })
+                .catch(error => console.error('Error loading locations:', error));
+        });
+    </script>
     </div>
 
 </section>

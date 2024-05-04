@@ -23,6 +23,7 @@ class User(UserMixin,db.Model):
     username = db.Column(db.String(255), unique=True, nullable=False)
     email = db.Column(db.String(255), unique=True, nullable=False)
     password_hash = db.Column(db.String(255), nullable=False)
+    phone_number = db.Column(db.String(40), nullable=True)
     role = db.Column(db.Enum(UserRole), default=UserRole.USER)
     liked_cars = db.relationship('Car', secondary=likes,
                                  backref=db.backref('liked_by', lazy='dynamic'))

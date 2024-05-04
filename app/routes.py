@@ -1,12 +1,13 @@
 from app import app, db, login
 from flask import render_template, request, jsonify, flash, redirect, url_for
 from app.models import User, Car, Reservation, Location
-from app.utilities.helpers import clean_input
+from app.utilities.helpers import clean_input, is_valid_email
 from app.utilities.auth import admin_required, user_only
 from flask_login import login_user, logout_user, current_user, login_required
 from enum import Enum, unique
 from sqlalchemy import and_, or_
 import requests
+import re
 
 
 @unique
@@ -93,9 +94,17 @@ def signup():
         username = request.form.get('username')
         email = request.form.get('email')
         password = request.form.get('password')
-        if not username or not email or not password:
-            flash('Username, email, and password are required!')
+        # phone_number = request.form.get('phone_number')
+        confirm_password = request.form.get('confirm_password')
+        if not all([username, email,password, confirm_password]):
+            flash('All fields are required!')
             return redirect(url_for('signup'))
+        
+        # Check password confirmation
+        if password != confirm_password:
+            flash('Passwords do not match!')
+            return redirect(url_for('signup'))
+
 
         if User.query.filter_by(username=username).first():
             flash('Username already taken')
@@ -111,31 +120,17 @@ def signup():
         db.session.add(new_user)
         db.session.commit()
 
-        flash('Registration successful')
+        flash('Registration successful. Please login.')
         return redirect(url_for('login'))
     return render_template('register.html')
 
 # 個人資訊
 
 
-@app.route("/profile", methods=['GET', 'POST'])
+@app.route("/profile/")
 @login_required
 @user_only
 def profile():
-    if request.method == 'POST':
-        username = request.form.get('username')
-        email = request.form.get('email')
-        if not username or not email:
-            return jsonify({'error': 'Username and email are required!'}), 400
-
-        # Update current_user instance
-        current_user.username = username
-        current_user.email = email
-        db.session.commit()
-
-        # return jsonify({'message': 'Profile updated successfully'}), 200
-        return render_template('profile.html', template='_profile.html', user=current_user)
-     # For GET request
     return render_template('profile.html', template='_profile.html', user=current_user)
 
 
@@ -155,15 +150,44 @@ def favorites():
 
 # ==== api ====
 
-# 個人資訊
-@app.route('/api/user_profile')
+@app.route("/api/profile", methods=['GET', 'POST'])
 @login_required
-def user_profile_api():
-    # Assuming user data is stored in a dictionary format in `current_user`
-    return jsonify({
-        'username': current_user.username,
-        'email': current_user.email
-    })
+def api_profile():
+    if request.method == 'GET':
+        return jsonify({
+            'username': current_user.username,
+            'email': current_user.email,
+            'phone_number': current_user.phone_number
+        })
+
+    elif request.method == 'POST':
+        username = request.form.get('username')
+        email = request.form.get('email')
+        phone_number = request.form.get('phone_number')
+
+        if not username or not email or not phone_number:
+            flash('Missing username, email, or phone number.', 'error')
+            return redirect(url_for('profile'))
+
+        if not is_valid_email(email):
+            flash('Invalid email format.', 'error')
+            return redirect(url_for('profile'))
+
+        if not re.match(r'^09\d{8}$', phone_number):
+            flash("Phone number must start with '09' and be 10 digits long.", 'error')
+            return redirect(url_for('profile'))
+
+        user = User.query.filter_by(username=username).first()
+        if user is not None and user.username != current_user.username:
+            flash('Username already taken.', 'error')
+            return redirect(url_for('profile'))
+
+        current_user.username = username
+        current_user.email = email
+        current_user.phone_number = phone_number
+        db.session.commit()
+        flash('Profile updated successfully', 'success')
+        return redirect(url_for('profile'))
 
 
 # 所有汽車
@@ -235,7 +259,10 @@ def pop():
         'model': car.model,
         'seat': car.seat,
         'door': car.door,
-        'body': car.body
+        'body': car.body,
+        'price':car.price,
+        'original_price': round(3*(car.price)),
+        'discount_price':round(3*(car.price)*0.95)
     } for car in cars]
 
     return jsonify(cars_list)
@@ -255,7 +282,11 @@ def car_spec_api(car_id):
         'seat': car.seat,
         'door': car.door,
         'body': car.body,
-        'price': car.price
+        'price': car.price,
+        'displacement':car.displacement,
+        'wheelbase': car.wheelbase,
+        'power_type': car.power_type,
+        
     }
 
     return jsonify(car_data)
@@ -341,7 +372,7 @@ def user_favorites():
     liked_cars = user.liked_cars
     print(liked_cars)
     cars_list = [
-        {'id': car.id, 'name': car.name}
+        {'id': car.id, 'name': car.name, 'price':car.price}
         for car in liked_cars
     ]
     return jsonify(cars_list)
@@ -375,19 +406,8 @@ def user_reservations():
 # ========== admin ===========
 # ============================
 
-# 瀏覽汽車
-# @app.route('/admin', methods=['GET'])
-# @login_required
-# def home_car():
-#     # if current_user.role.value == UserRole.ADMIN.value:
-#     #     return redirect(url_for('admin_cars'))
-#     # # Redirect non-admins to the user cars page
-#     # return redirect(url_for('view_cars'))
-#     return redirect(url_for('admin_cars'))
-
-
 @app.route('/admin')
-@app.route('/admin/cars')
+@app.route('/admin/cars', methods=['GET'])
 @login_required
 @admin_required
 def admin_cars():

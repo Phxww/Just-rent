@@ -3,7 +3,7 @@
         <div class="d-flex justify-content-between align-items-center mb-3">
             <h4 class="text-right">My Profile</h4>
         </div>
-        <form method="post" action="/profile">
+        <form method="POST" action="/api/profile">
             <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
             <div class="col mt-3">
                 <div class="col-md-6">
@@ -13,6 +13,10 @@
                 <div class="col-md-6 mt-3">
                     <label class="labels" for="email">Email</label>
                     <input id="email" name="email" type="email" class="form-control" value="">
+                </div>
+                <div class="col-md-6 mt-3">
+                    <label class="labels" for="phone_number">Phone number</label>
+                    <input id="phone_number" name="phone_number" type="phone_number" class="form-control" value="">
                 </div>
             </div>
             <div class="row mt-3">

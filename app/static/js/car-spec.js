@@ -2,16 +2,43 @@ fetch(`/api/cars/${carId}`)
   .then((response) => response.json())
   .then((car) => {
     // Assuming response.json() returns a car object directly
-    const carsSpec = document.getElementById("car-spec");
+    const carsSpec = document.getElementById("spec-table-body");
     const carHtml = `
-            <h3>${car.name}</h3>
-            <h2> Price: ${car.price} / day</h2>
-            <h4>Specifications</h4>
-            <ul class="list-unstyled">
-                <li><strong>Body:</strong> ${car.body}</li>
-                <li><strong>Seat:</strong> ${car.seat}</li>
-            </ul>
-        `;
+    <tr>
+        <th>Name</th>
+        <td>${car.name}</td>
+    </tr>
+    <tr>
+        <th>Price / day</th>
+        <td>$ ${car.price}</td>
+    </tr>
+    <tr>
+        <th>Body</th>
+        <td>${car.body}</td>
+    </tr>
+    <tr>
+        <th>Seat</th>
+        <td>${car.seat}</td>
+    </tr>
+    <tr>
+        <th>Door</th>
+        <td>${car.door}</td>
+    </tr>
+        </tr>
+    <tr>
+        <th>Displacement</th>
+        <td>${car.displacement}</td>
+    </tr>
+        </tr>
+    <tr>
+        <th>Wheelbase</th>
+        <td>${car.wheelbase}</td>
+    </tr>
+     <tr>
+        <th>Power type</th>
+        <td>${car.power_type}</td>
+    </tr>
+`;
     carsSpec.innerHTML = carHtml;
   })
   .catch((error) => console.error("Error fetching car:", error));
