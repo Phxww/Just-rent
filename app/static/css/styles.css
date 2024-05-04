@@ -32,16 +32,32 @@ footer {
   justify-content: end;
 }
 
+
 /* home content */
-section-hero {
-  background-color: #f8f9fa; /* 轻灰色背景 */
+.section-hero {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
   padding-top: 40px;
   padding-bottom: 30px;
+  background-color: #f8f9fa;
+}
+
+#home_car {
+    flex: 0 0 50%; /* 不讓flex item縮放，始終維持50%寬度 */
+    max-width: 50%; /* 限制最大寬度為50%，避免超過 */
+}
+
+.col-md-6 img {
+    width: 100%; /* 讓圖片寬度自適應父容器 */
+    height: auto; /* 高度自適應保持圖片比例 */
+    object-fit: cover; /* 覆蓋整個元素，但可能切除圖片邊緣 */
 }
 
 .card-img {
-  object-fit: cover; /* 确保图片覆盖整个元素 */
-  height: 50%; /* 图片高度自适应卡片的高度 */
+  width: 100%; /* 圖片寬度填滿容器 */
+  height: auto; /* 高度自適應 */
+  object-fit: contain; /* 圖片覆蓋整個可用區域，不留空隙，不變形 */
 }
 
 .card-body {
