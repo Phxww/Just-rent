@@ -3,18 +3,31 @@
 {% block content %}
 <!-- content begin -->
 <div id="content">
-    <section id="section-hero">
+    <section id="section-hero" class="py-5">
         <div class="container">
-            <div class="row">
-                <div class="col-lg-6 fade-in">
-                    <h4><span style="font-weight: bold;">Plan your trip now</span></h4>
-                    <h1>Explore the world with a comfortable car</h1>
-                    <p class="lead">Embark on unforgettable adventures and discover the world in unparalleled comfort
-                        and
-                        style with our fleet of exceptionally comfortable cars.</p>
-                    <form>
-                        <button type="submit" class="btn btn-outline-dark"> Choose a Car </button>
-                    </form>
+            <div class="row align-items-center">
+                <!-- Card with Image on the left and text on the right -->
+                <div class="col-lg-12">
+                    <div class="card mb-3">
+                        <div class="row g-0">
+                            <!-- Image Section -->
+                            <div id=home_car class="col-md-6 mt-2 mb-2">
+                                <img src='https://i.postimg.cc/y8PxFCFt/Free-Car-Transparent-Background-01.jpg'
+                                    alt='Free-Car-Transparent-Background-01' />
+                            </div>
+                            <!-- Text Section -->
+                            <div id=home_car class="col-md-6">
+                                <div class="card-body">
+                                    <h4 class="card-title"><strong>Plan your trip now</strong></h4>
+                                    <h1 class="display-4">Explore the world with a comfortable car</h1>
+                                    <p class="card-text">Embark on unforgettable adventures and discover the world in
+                                        unparalleled comfort and style with our fleet of exceptionally comfortable cars.
+                                    </p>
+                                    <a href="/cars" class="btn btn-primary">Choose a Car</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -35,6 +48,19 @@
         </div>
     </section>
 
+    <script>
+        window.addEventListener('load', function () {
+            var heroSection = document.getElementById('section-hero');
+            // 确保图片加载完成
+            heroSection.style.backgroundImage = 'url("https://imgur.com/bifdfQc")';
+
+            // 图片加载后开始显示文本
+            var fadeInElements = document.querySelectorAll('.fade-in');
+            fadeInElements.forEach(element => {
+                element.style.animationPlayState = 'running'; // 开始动画
+            });
+        });
+    </script>
 
 </div>
 <!-- content close -->

@@ -2,7 +2,8 @@ from app import db
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import UserMixin
 from enum import Enum, unique
-
+from sqlalchemy.orm import relationship
+from datetime import datetime, timezone
 
 @unique
 class UserRole(Enum):
@@ -22,6 +23,7 @@ class User(UserMixin,db.Model):
     username = db.Column(db.String(255), unique=True, nullable=False)
     email = db.Column(db.String(255), unique=True, nullable=False)
     password_hash = db.Column(db.String(255), nullable=False)
+    phone_number = db.Column(db.String(40), nullable=True)
     role = db.Column(db.Enum(UserRole), default=UserRole.USER)
     liked_cars = db.relationship('Car', secondary=likes,
                                  backref=db.backref('liked_by', lazy='dynamic'))
@@ -49,3 +51,42 @@ class Car(db.Model):
     car_length = db.Column(db.String(255), nullable=False, default="Unknown")
     wheelbase = db.Column(db.String(255), nullable=False, default="Unknown")
     power_type = db.Column(db.String(255), nullable=False, default="Unknown")
+    price = db.Column(db.Integer, nullable=False, default=0)
+    # Relationship indicating that a car can have multiple reservations
+    reservations = db.relationship('Reservation', back_populates='car')
+    
+
+
+class Reservation(db.Model):
+    __tablename__ = "reservations"
+    id = db.Column(db.Integer, primary_key=True)
+    # FOREIGN KEY (car_id) REFERENCES Car(id)
+    car_id = db.Column(db.Integer, db.ForeignKey('cars.id'))
+    # FOREIGN KEY (user_id) REFERENCES User(id)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
+    start_date = db.Column(db.Date, nullable=False)
+    end_date = db.Column(db.Date, nullable=False)
+    pick_up_location_id = db.Column(db.Integer, db.ForeignKey('locations.id'))
+    drop_off_location_id = db.Column(db.Integer, db.ForeignKey('locations.id'))
+    created_at = db.Column(db.DateTime, default=datetime.now(timezone.utc))
+    status = db.Column(db.String(255), nullable=False, default='Pending')
+    auth_code = db.Column(db.Integer, nullable=True)
+
+    # Relationships linking back to the Car, User, and Location
+    # 使用 back_populates 來確保兩邊資料的修改能同步更新
+    car = db.relationship('Car', back_populates='reservations')
+    # backref 只需要在一邊設置，SQLAlchemy 會自動處理反向關聯的建立
+    user = db.relationship('User', backref='reservations')
+    pick_up_location = db.relationship("Location", foreign_keys=[pick_up_location_id])
+    drop_off_location = db.relationship("Location", foreign_keys=[drop_off_location_id])
+
+
+class Location(db.Model):
+    __tablename__ = "locations"
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(255), nullable=False)
+    address = db.Column(db.String(255), nullable=False)
+    city = db.Column(db.String(50), nullable=False)  # 縣市
+    postal_code = db.Column(db.String(10), nullable=True)  # 郵遞區號
+    latitude = db.Column(db.Float, nullable=True)  # 緯度
+    longitude = db.Column(db.Float, nullable=True)  # 經度

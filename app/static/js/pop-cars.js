@@ -3,9 +3,8 @@ fetch("/api/cars/pop")
   .then((data) => {
     const carsContainer = document.getElementById("cars-container");
 
-    data
-      .forEach((car) => {
-        const carHtml = `
+    data.forEach((car) => {
+      const carHtml = `
         <div class="col-md-4 mb-4">
           <div class="card h-100">
               <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
@@ -25,12 +24,13 @@ fetch("/api/cars/pop")
                   <div class="col text-center">
                     <p class="card-text">
                       <strong>Daily price:</strong><span></span>
-                      <span class="text-muted original-price"><del>$300</del></span>
-                      <span class="discounted-price ms-2">$265</span>
+                      <span class="text-muted original-price">$ ${car.price}</span>
+                      <br>
+                      <span class="discounted-price ms-2"> 3 days <del>$ ${car.original_price} </del>$ ${car.discount_price} </span>
                     </p>
                   </div>
                   <div class="col text-center">
-                    <a href="#" class="btn btn-primary">Rent Now</a>
+                    <a href="/cars/${car.id}" class="btn btn-primary">Check</a>
                   </div>
                 </div>
               </div>
@@ -38,7 +38,7 @@ fetch("/api/cars/pop")
           </div>
         </div>
       `;
-        carsContainer.innerHTML += carHtml;
-      })
-      .catch((error) => console.error("Error fetching cars:", error));
-  });
+      carsContainer.innerHTML += carHtml;
+    });
+  })
+  .catch((error) => console.error("Error fetching cars:", error));

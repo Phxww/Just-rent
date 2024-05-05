@@ -1,11 +1,11 @@
 {% extends "base.html" %}
 
 {% block content %}
-<section id="section-car-details" class="no-top">
+<section id="section-car-details" class="py-5">
     <div class="container">
-        <div class="row g-5">
-            <!-- Left Column for Carousel -->
-            <div class="col-lg-6">
+        <!-- Row for Carousel: Centered -->
+        <div class="row justify-content-center">
+            <div class="col-md-8">
                 <!-- Bootstrap Carousel -->
                 <div id="carouselExampleIndicators" class="carousel slide" data-bs-ride="carousel">
                     <div class="carousel-indicators">
@@ -65,10 +65,22 @@
                     </button>
                 </div>
             </div>
+        </div>
 
 
-            <!-- Middle Column for Car Details -->
-            <div class="col-lg-3" id="car-spec">
+        <!-- Middle Column for Car Details -->
+        <div class="row justify-content-center">
+            <div class="col-md-4 mt-3" id="car-spec">
+                <div class="text-center">
+                <h4>Car Specifications</h4>
+                </div>
+                <div class="table-responsive">
+                    <table class="table table-bordered">
+                        <tbody id="spec-table-body">
+                            <!-- JavaScript will populate this table -->
+                        </tbody>
+                    </table>
+                </div>
                 <script type="text/javascript">
                     var carId = {{ car_id }};
                     console.log('Car ID is:', carId);  // Check if carId is correct
@@ -77,166 +89,68 @@
             </div>
 
             <!-- Right Column for Booking Form -->
-            <div class="col-lg-3">
-                <div class="border p-4 rounded">
-                    <h3 class="text-center mb-3">Daily Price: $265</h3>
+            <div class="col-md-4">
+                <div class="border p-4 rounded mt-4">
                     <h4>Booking this car</h4>
                     <!-- Booking Form -->
-                    <form>
+                    <form id="bookingForm">
                         <!-- Pick Up Location -->
                         <div class="mb-3">
                             <label for="pickupLocation" class="form-label">Pick Up Location</label>
-                            <select class="form-control" name="pickup_location" id="pickupLocation">
-                                <option selected disabled value="Select Location">Location</option>
-                                <option value="tapei_101">台北101店</option>
+                            <select class="form-control" name="pickup_location" id="pickupLocation" required>
+                                <option selected disabled value="">Select Location</option>
                             </select>
                         </div>
                         <!-- Drop Off Location -->
                         <div class="mb-3">
                             <label for="dropoffLocation" class="form-label">Drop Off Location</label>
-                            <select class="form-control" name="dropoff_location" id="dropoffLocation">
-                                <option selected disabled value="Select Location">Location</option>
-                                <option value="kaohsiung_85">高雄85店</option>
+                            <select class="form-control" name="dropoff_location" id="dropoffLocation" required>
+                                <option selected disabled value="">Select Location</option>
                             </select>
                         </div>
 
-                        <!--  -->
+                        <!-- Pick Up Date -->
                         <div class="mb-3">
-                            <div class="row g-1">
-                                <p>Pick Up Date & Time</p>
-                                <div class="col-md">
-                                    <input type="date" class="form-control" id="date-picker" name="pick_up_date"
-                                        placeholder="Pick Up Date">
-                                    <label for="date-picker"></label>
-
-                                </div>
-                                <div class="col-md">
-                                    <select class="form-control" name="pick_up_time" id="pickup-time">
-                                        <option selected disabled value="Select time">Time</option>
-                                        <option value="00:00">00:00</option>
-                                        <option value="00:30">00:30</option>
-                                        <option value="01:00">01:00</option>
-                                        <option value="01:30">01:30</option>
-                                        <option value="02:00">02:00</option>
-                                        <option value="02:30">02:30</option>
-                                        <option value="03:00">03:00</option>
-                                        <option value="03:30">03:30</option>
-                                        <option value="04:00">04:00</option>
-                                        <option value="04:30">04:30</option>
-                                        <option value="05:00">05:00</option>
-                                        <option value="05:30">05:30</option>
-                                        <option value="06:00">06:00</option>
-                                        <option value="06:30">06:30</option>
-                                        <option value="07:00">07:00</option>
-                                        <option value="07:30">07:30</option>
-                                        <option value="08:00">08:00</option>
-                                        <option value="08:30">08:30</option>
-                                        <option value="09:00">09:00</option>
-                                        <option value="09:30">09:30</option>
-                                        <option value="10:00">10:00</option>
-                                        <option value="10:30">10:30</option>
-                                        <option value="11:00">11:00</option>
-                                        <option value="11:30">11:30</option>
-                                        <option value="12:00">12:00</option>
-                                        <option value="12:30">12:30</option>
-                                        <option value="13:00">13:00</option>
-                                        <option value="13:30">13:30</option>
-                                        <option value="14:00">14:00</option>
-                                        <option value="14:30">14:30</option>
-                                        <option value="15:00">15:00</option>
-                                        <option value="15:30">15:30</option>
-                                        <option value="16:00">16:00</option>
-                                        <option value="16:30">16:30</option>
-                                        <option value="17:00">17:00</option>
-                                        <option value="17:30">17:30</option>
-                                        <option value="18:00">18:00</option>
-                                        <option value="18:30">18:30</option>
-                                        <option value="19:00">19:00</option>
-                                        <option value="19:30">19:30</option>
-                                        <option value="20:00">20:00</option>
-                                        <option value="20:30">20:30</option>
-                                        <option value="21:00">21:00</option>
-                                        <option value="21:30">21:30</option>
-                                        <option value="22:00">22:00</option>
-                                        <option value="22:30">22:30</option>
-                                        <option value="23:00">23:00</option>
-                                        <option value="23:30">23:30</option>
-                                    </select>
-                                    <label for="pickup-time"></label>
-                                </div>
-                            </div>
+                            <label for="date-picker" class="form-label">Pick Up Date</label>
+                            <input type="date" class="form-control" id="date-picker" name="pick_up_date" required>
                         </div>
+
+                        <!-- Return Date -->
                         <div class="mb-3">
-                            <div class="row g-1">
-                                <p>Return Up Date & Time</p>
-                                <div class="col-md">
-                                    <input type="date" class="form-control" id="date-return" name="return_date"
-                                        placeholder="Return Date">
-                                    <label for="date-return"></label>
-
-                                </div>
-                                <div class="col-md">
-                                    <select class="form-control" name="return_time" id="return-time">
-                                        <option selected disabled value="Select time">Time</option>
-                                        <option value="00:00">00:00</option>
-                                        <option value="00:30">00:30</option>
-                                        <option value="01:00">01:00</option>
-                                        <option value="01:30">01:30</option>
-                                        <option value="02:00">02:00</option>
-                                        <option value="02:30">02:30</option>
-                                        <option value="03:00">03:00</option>
-                                        <option value="03:30">03:30</option>
-                                        <option value="04:00">04:00</option>
-                                        <option value="04:30">04:30</option>
-                                        <option value="05:00">05:00</option>
-                                        <option value="05:30">05:30</option>
-                                        <option value="06:00">06:00</option>
-                                        <option value="06:30">06:30</option>
-                                        <option value="07:00">07:00</option>
-                                        <option value="07:30">07:30</option>
-                                        <option value="08:00">08:00</option>
-                                        <option value="08:30">08:30</option>
-                                        <option value="09:00">09:00</option>
-                                        <option value="09:30">09:30</option>
-                                        <option value="10:00">10:00</option>
-                                        <option value="10:30">10:30</option>
-                                        <option value="11:00">11:00</option>
-                                        <option value="11:30">11:30</option>
-                                        <option value="12:00">12:00</option>
-                                        <option value="12:30">12:30</option>
-                                        <option value="13:00">13:00</option>
-                                        <option value="13:30">13:30</option>
-                                        <option value="14:00">14:00</option>
-                                        <option value="14:30">14:30</option>
-                                        <option value="15:00">15:00</option>
-                                        <option value="15:30">15:30</option>
-                                        <option value="16:00">16:00</option>
-                                        <option value="16:30">16:30</option>
-                                        <option value="17:00">17:00</option>
-                                        <option value="17:30">17:30</option>
-                                        <option value="18:00">18:00</option>
-                                        <option value="18:30">18:30</option>
-                                        <option value="19:00">19:00</option>
-                                        <option value="19:30">19:30</option>
-                                        <option value="20:00">20:00</option>
-                                        <option value="20:30">20:30</option>
-                                        <option value="21:00">21:00</option>
-                                        <option value="21:30">21:30</option>
-                                        <option value="22:00">22:00</option>
-                                        <option value="22:30">22:30</option>
-                                        <option value="23:00">23:00</option>
-                                        <option value="23:30">23:30</option>
-                                    </select>
-                                    <label for="return-time"></label>
-                                </div>
-                            </div>
+                            <label for="date-return" class="form-label">Return Date</label>
+                            <input type="date" class="form-control" id="date-return" name="return_date" required>
                         </div>
-                        <!-- More form inputs -->
-                        <button type="submit" class="btn btn-primary w-100 mt-4">Book Now</button>
+
+                        <!-- Submit Button -->
+                        <button type="submit" id="book-now-btn" class="btn btn-primary w-100 mt-4">Rent</button>
                     </form>
                 </div>
             </div>
         </div>
+    </div>
+    <script src="{{ url_for('static', filename='js/check-book.js') }}">
+        var carId = {{ car_id }};
+    </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Fetch location data from the server
+            fetch('/api/locations')
+                .then(response => response.json())
+                .then(locations => {
+                    const pickupSelect = document.getElementById('pickupLocation');
+                    const dropoffSelect = document.getElementById('dropoffLocation');
+
+                    // Populate the pickup and dropoff location dropdowns
+                    locations.forEach(location => {
+                        // var optionElementReference = new Option(text, value, defaultSelected, selected);
+                        const option = new Option(location.name + " - " + location.city, location.id);
+                        pickupSelect.add(option.cloneNode(true));
+                        dropoffSelect.add(option);
+                    });
+                })
+                .catch(error => console.error('Error loading locations:', error));
+        });
+    </script>
     </div>
 
 </section>

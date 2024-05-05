@@ -3,10 +3,10 @@ function loadPage(page) {
   const brand = document.getElementById("brand-filter").value;
   const doors = document.getElementById("doors-filter").value;
   const seats = document.getElementById("seats-filter").value;
-  // const powerType = document.getElementById("power-type-filter").value;
+  const powerType = document.getElementById("power-filter").value;
   // const displacement = document.getElementById("displacement-filter").value;
   // const queryParams = new URLSearchParams({page, brand, doors, seats, powerType, displacement});
-    const queryParams = new URLSearchParams({page, brand,seats,doors});
+    const queryParams = new URLSearchParams({page, brand,seats,doors,powerType});
     console.log(queryParams.toString());
   fetch(`/api/cars?${queryParams.toString()}`)
   // fetch(`/api/cars?page=${page}`)
@@ -32,7 +32,7 @@ function loadPage(page) {
                       }" data-liked="${car.isLiked}" data-car-id="${
           car.id
         }"></i>
-                  <p class="card-text">Daily rate from <strong>$265</strong></p><br>
+                  <p class="card-text">Daily rate from <strong>$ ${car.price}</strong></p><br>
               </div>
           </div>
         </div>

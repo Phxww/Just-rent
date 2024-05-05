@@ -9,12 +9,12 @@ function favoriteCar() {
         const row = document.createElement("tr"); 
         row.innerHTML = `
           <td><span class="d-lg-none d-sm-block">Car ID</span>
-              <div class="badge bg-gray-100 text-dark">${car.id}</div>
+              <div class="bg-gray-100 text-dark">${car.id}</div>
           </td>
           <td><span class="d-lg-none d-sm-block">Car Name</span><span class="bold">${car.name}</span></td>
-          <td><span class="d-lg-none d-sm-block">Daily rate</span>${car.daily_rate}</td>
+          <td><span class="d-lg-none d-sm-block">Daily rate</span>$${car.price}</td>
           <td>
-              <div class="badge rounded-pill bg-primary" onclick="rentNow(${car.id})">Rent now</div>
+              <a href="/cars/${car.id}" class="btn btn-primary">Check</a>
           </td>
         `;
         tableBody.appendChild(row); // Append the new row to the table body
