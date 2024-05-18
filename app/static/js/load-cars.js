@@ -16,11 +16,14 @@ function loadPage(page) {
       const carsContainer = document.getElementById("cars-container");
       carsContainer.innerHTML = ""; // clear the prvious page data
       data.cars.forEach((car) => {
+        const imageName = encodeURIComponent(car.name);
+
+        const imageUrl = `../static/crawler/${imageName}/img_2.jpg`; // Update the extension if different
         const carHtml = `
         <div class="col-lg-3 col-md-6 mb-4">
           <div class="card">
           <a href="/cars/${car.id}">
-            <img src="https://fakeimg.pl/250/" class="card-img-top" alt="Car image"
+            <img src= ${imageUrl} class="card-img-top" alt="Car image"
                 style="height: 200px;"></a>
               <div class="card-body">
                   <h6 class="card-title"><a href="/cars/${car.id}">${
@@ -32,7 +35,9 @@ function loadPage(page) {
                       }" data-liked="${car.isLiked}" data-car-id="${
           car.id
         }"></i>
-                  <p class="card-text">Daily rate from <strong>$ ${car.price}</strong></p><br>
+                  <p class="card-text">Daily rate from <strong>$ ${
+                    car.price
+                  }</strong></p><br>
               </div>
           </div>
         </div>

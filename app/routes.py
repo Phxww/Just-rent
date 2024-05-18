@@ -8,6 +8,7 @@ from enum import Enum, unique
 from sqlalchemy import and_, or_
 import requests
 import re
+import json
 
 
 @unique
@@ -42,7 +43,11 @@ def view_cars():
 @app.route('/cars/<int:car_id>')
 @user_only
 def view_spec_car(car_id):
-    return render_template('car-single.html', car_id=car_id, user=current_user)
+    response = car_spec_api(car_id)
+    if not response:
+        return "Car not found", 404
+    car_details = json.loads(response.get_data(as_text=True))
+    return render_template('car-single.html', car_id=car_id, car=car_details, user=current_user)
 
 
 # 使用者登入

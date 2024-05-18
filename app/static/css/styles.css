@@ -40,7 +40,7 @@ footer {
   justify-content: space-between;
   padding-top: 40px;
   padding-bottom: 30px;
-  background-color: #f8f9fa;
+  /* background-color: #f8f9fa; */
 }
 
 #home_car {
@@ -127,6 +127,3 @@ footer {
   border: 1px solid red;
 }
 
-#section-cars {
-  border: 1px solid blue;
-} */

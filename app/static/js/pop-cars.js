@@ -4,13 +4,18 @@ fetch("/api/cars/pop")
     const carsContainer = document.getElementById("cars-container");
 
     data.forEach((car) => {
+      const imageName = encodeURIComponent(
+        car.name
+      );
+
+      const imageUrl = `../static/crawler/${imageName}/img_2.jpg`; // Update the extension if different
       const carHtml = `
         <div class="col-md-4 mb-4">
           <div class="card h-100">
               <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
               Hot!
           </span>
-            <img class="card-img-top" src="https://fakeimg.pl/250/" alt="Car 1">
+            <img class="card-img-top" src="${imageUrl}" alt="${car.name}">
             <div class="card-body">
               <h5 class="card-title">${car.name}</h5>
                 <p class="card-text">
