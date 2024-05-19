@@ -13,7 +13,7 @@
                     {% endfor %}
                     {% endif %}
                     {% endwith %}
-                    <form method="POST" action="{{ url_for('signup')}}" class="px-md-2">
+                    <form method="POST" action="{{ url_for('auth.signup')}}" class="px-md-2">
                         <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
 
                         <div data-mdb-input-init class="form-outline mb-4">
