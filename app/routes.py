@@ -2,7 +2,7 @@ from app import app, db, login
 from flask import render_template, request, jsonify, flash, redirect, url_for
 from app.models import User, Car, Reservation, Location
 from app.utilities.helpers import clean_input, is_valid_email
-from app.utilities.auth import admin_required, user_only
+from app.utilities.rbac import admin_required, user_only
 from flask_login import login_user, logout_user, current_user, login_required
 from enum import Enum, unique
 from sqlalchemy import and_, or_

@@ -49,7 +49,7 @@
                                 <button class="btn btn-outline-success login-btn" type="text">Login</button>
                             </a>
                             {% else %}
-                            <a href="{{ url_for('profile')}}"> <img id="avatar" class="rounded-circle me-3" width="50px" src="{{user.avatar(user.id)}}" alt="User" />
+                            <a href="{{ url_for('main.profile')}}"> <img id="avatar" class="rounded-circle me-3" width="50px" src="{{user.avatar(user.id)}}" alt="User" />
                             </a>
                             <a href="/logout">
                                 <button class="btn btn-outline-success logout-btn" type="text">Logout</button>
