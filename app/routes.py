@@ -8,6 +8,7 @@ from enum import Enum, unique
 from sqlalchemy import and_, or_
 import requests
 import re
+from datetime import datetime
 
 
 @unique
@@ -550,58 +551,66 @@ def test_db():
 @app.route('/api/check-availability',  methods=['POST'])
 @login_required
 def check_availability():
-    # Access the JSON data sent with the POST request
-    data = request.get_json()
-    if not data:
-        return jsonify({'error': 'No data received'}), 400
 
-    # Extract dates from the JSON data
-    print(data)
-    pick_up_loc = data['pickUpLocation']
-    return_loc = data['dropOffLocation']
-    pick_up_date = data['pickUpDate']
-    return_date = data['returnDate']
-    car_id = data['carId']
+    try:
+        # Access the JSON data sent with the POST request
+        data = request.get_json()
+        if not data:
+            return jsonify({'error': 'No data received'}), 400
 
-    if pick_up_date > return_date:
-        return jsonify({'error': 'Pick-up date must not be later than the return date.'}), 400
+        # Extract dates from the JSON data
+        print(data)
+        pick_up_loc = data['pickUpLocation']
+        return_loc = data['dropOffLocation']
+        pick_up_date = data['pickUpDate']
+        return_date = data['returnDate']
+        car_id = data['carId']
 
-    result = Reservation.query.filter(
-        Reservation.car_id == car_id,
-        # or_(...)用來包含多個條件
-        or_(
-            # 假設我的 Pick Up Date: 2023-04-15 , Return Date: 2023-04-20
-            # start_date <= '2023-04-15' AND end_date >= '2023-04-15'
-            # 檢查任何已存在的預訂是否覆蓋了取車日期
-            and_(Reservation.start_date <= pick_up_date,
-                 Reservation.end_date >= pick_up_date),
-            # 檢查任何已存在的預訂是否覆蓋還車日期
-            and_(Reservation.start_date <= return_date,
-                 Reservation.end_date >= return_date),
-            # 檢查是否有預訂的完整時段位於請求的日期範圍內
-            and_(Reservation.start_date >= pick_up_date,
-                 Reservation.end_date <= return_date)
-        )
-    ).first()
+        if pick_up_date > return_date:
+            return jsonify({'error': 'Pick-up date must not be later than the return date.'}), 400
 
-    if result:
-        return jsonify({'available': False}), 200
+        # 暫時註解，為了已預定，但交易那邊尚未成功的時候測試用，就不會遇到已預訂但未交易的情況方昇
 
-    # Car is available, create a new reservation
-    new_reservation = Reservation(
-        car_id=car_id,
-        user_id=current_user.id,
-        start_date=pick_up_date,
-        end_date=return_date,
-        pick_up_location_id=pick_up_loc,
-        drop_off_location_id=return_loc,
-        status='Pending'  # Initial reservation status
-    )
-    db.session.add(new_reservation)
-    db.session.commit()
+        # result = Reservation.query.filter(
+        #     Reservation.car_id == car_id,
+        #     # or_(...)用來包含多個條件
+        #     or_(
+        #         # 假設我的 Pick Up Date: 2023-04-15 , Return Date: 2023-04-20
+        #         # start_date <= '2023-04-15' AND end_date >= '2023-04-15'
+        #         # 檢查任何已存在的預訂是否覆蓋了取車日期
+        #         and_(Reservation.start_date <= pick_up_date,
+        #             Reservation.end_date >= pick_up_date),
+        #         # 檢查任何已存在的預訂是否覆蓋還車日期
+        #         and_(Reservation.start_date <= return_date,
+        #             Reservation.end_date >= return_date),
+        #         # 檢查是否有預訂的完整時段位於請求的日期範圍內
+        #         and_(Reservation.start_date >= pick_up_date,
+        #             Reservation.end_date <= return_date)
+        #     )
+        # ).first()
 
-    return jsonify({'available': True, 'reservationId': new_reservation.id}), 200
+        # if result:
+        #     return jsonify({'available': False}), 200
 
+        # # Car is available, create a new reservation
+        # new_reservation = Reservation(
+        #     car_id=car_id,
+        #     user_id=current_user.id,
+        #     start_date=datetime.strptime(pick_up_date, '%Y-%m-%d').date(),
+        #     end_date= datetime.strptime(return_date, '%Y-%m-%d').date(),
+        #     pick_up_location_id=pick_up_loc,
+        #     drop_off_location_id=return_loc,
+        #     status='Pending'  # Initial reservation status
+        # )
+        # db.session.add(new_reservation)
+        # db.session.commit()
+
+        # 暫時註解，為了已預定，但交易那邊尚未成功的時候測試用，就不會遇到已預訂但未交易的情況發生。
+        # return jsonify({'available': True, 'reservationId': new_reservation.id}), 200
+        # 暫時寫死 id 為 1
+        return jsonify({'available': True, 'reservationId': 1}), 200                
+    except Exception as e:
+        print('Error:',e)
 
 @app.route('/api/locations')
 def locations_api():
@@ -661,7 +670,8 @@ def proxy_payment():
     # Headers for TapPay request
     headers = {
         "Content-Type": "application/json",
-        "x-api-key": "partner_KOO8dhjMg4V7bifJUKXcuDXiYW0lK78oFvICgoeREFyh6Hp31fuu306X"
+        # "x-api-key": "partner_KOO8dhjMg4V7bifJUKXcuDXiYW0lK78oFvICgoeREFyh6Hp31fuu306X"
+        "x-api-key": "partner_GVQwt2gIZgnvl8Q4joIDNTOqwD4r7D99ZCcaf630kIqFqbyBbjGGaSyF"
     }
     # Forward the request to TapPay
     response = requests.post(tappay_url, headers=headers, json=incoming_data)

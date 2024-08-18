@@ -1,6 +1,12 @@
+// TPDirect.setupSDK(
+//   148927,
+//   "app_pqn8isDobHevEDlBS9023r4syqCC539nPabKGYIFHOfrKMXqDRBRpYggogeu",
+//   "sandbox"
+// );
+
 TPDirect.setupSDK(
-  148927,
-  "app_pqn8isDobHevEDlBS9023r4syqCC539nPabKGYIFHOfrKMXqDRBRpYggogeu",
+  152793,
+  "app_Ukv6aF5xgLj1608i6IoKZxgdVSttSEvYWLCh25v248I7M7rAUTI1Lf4eVjrK",
   "sandbox"
 );
 
@@ -38,19 +44,21 @@ document
           },
           body: JSON.stringify({
             prime: result.card.prime,
-            partner_key:
-              "partner_KOO8dhjMg4V7bifJUKXcuDXiYW0lK78oFvICgoeREFyh6Hp31fuu306X",
-            merchant_id: "tppf_annachu0988_GP_POS_1",
+            partner_key: "partner_GVQwt2gIZgnvl8Q4joIDNTOqwD4r7D99ZCcaf630kIqFqbyBbjGGaSyF",
+              // "partner_KOO8dhjMg4V7bifJUKXcuDXiYW0lK78oFvICgoeREFyh6Hp31fuu306X",
+            // merchant_id: "tppf_annachu0988_GP_POS_1",
+            merchant_id: "phoenix719_CTBC",
             details: reservationCar,
             amount: parseInt(reservationAmount) + 1,
             cardholder: {
-              phone_number: "+886923456789",
+              // phone_number: "+886923456789",
+              phone_number: "+886963079658",
               name: reservationName,
               email: reservationEmail,
               order_number: reservationId,
               // zip_code: "100",
               // address: "台北市天龍區芝麻街1號1樓",
-            },
+            }
           }),
         })
           .then((response) => response.json())
